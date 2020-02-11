@@ -15,6 +15,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import Snackbar from '@material-ui/core/Snackbar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const customStyles = {
     content : {
@@ -54,6 +57,32 @@ const styles = theme => ({
       width:'250px'
     },
 });
+
+const StyledMenu = withStyles({
+    paper: {
+      border: '4px',
+      backgroundColor:'white',
+    },
+  })(props => (
+    <Menu
+      elevation={0}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      {...props}
+    />
+  ));
+
+  const StyledMenuItem = withStyles(theme => ({
+    root: {
+    },
+  }))(MenuItem);
 
 const TabContainer = function(props){
     return(
@@ -97,6 +126,7 @@ class Header extends Component{
             loginPasswordError: "dispNone",
             loginError: "dispNone",
             loginSetOpen: false,
+            type: null,
         }
     }
 
@@ -135,7 +165,29 @@ class Header extends Component{
             setOpen: false
          });
     }
-    
+
+    openMenuHandler = (e) => {
+        if(this.state.button !== "Login"){
+            this.setState({ type: e.currentTarget });
+        }
+    }
+
+    logoutHandler = () => {
+        sessionStorage.clear();
+        this.setState({ 
+            button: "Login",
+            type: null,
+        });
+    }
+
+    profileHandler = () => {
+        this.props.history.push('/profile');
+    }
+
+    closeMenuHandler = () => {
+        this.setState({ type: null });
+    }
+ 
     tabChangeHandler = (event, value) =>{
         this.setState({value});
     }
@@ -198,7 +250,6 @@ class Header extends Component{
                             button: JSON.parse(this.responseText).first_name,
                         });    
                     }
-                    console.log(JSON.parse(this.responseText))
                 }
             });
             xhrLogin.open("POST", "http://localhost:8080/api/customer/login");
@@ -282,9 +333,23 @@ class Header extends Component{
                     </div>
                     <div className="login-button">
                         <Button variant="contained" color="default" onClick={this.openModalHandler}>
-                            <AccountCircleIcon style={{marginRight:"10px"}} /> {this.state.button}
+                            <AccountCircleIcon style={{marginRight:"10px"}} onClick={this.openMenuHandler}/> {this.state.button}
                         </Button> 
                     </div>
+                    <StyledMenu
+                        id="customized-menu"
+                        anchorEl={this.state.type}
+                        keepMounted
+                        open={Boolean(this.state.type)}
+                        onClose={this.closeMenuHandler}
+                        >
+                        <StyledMenuItem>
+                            <ListItemText primary="Profile" onClick={this.profileHandler}/> 
+                        </StyledMenuItem>
+                        <StyledMenuItem>
+                            <ListItemText primary="Logout" onClick={this.logoutHandler} />
+                        </StyledMenuItem>
+                    </StyledMenu>
                 </header>
                 <Modal 
                     ariaHideApp={false} 
@@ -404,7 +469,7 @@ class Header extends Component{
                     horizontal: 'left',
                     }}
                     open={this.state.loginSetOpen}
-                    autoHideDuration={100}
+                    autoHideDuration={1}
                     message="Logged in successfully!"
                 />
             </div>
