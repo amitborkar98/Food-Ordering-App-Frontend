@@ -89,6 +89,10 @@ class Header extends Component{
             login_passowrd: "",
             loginPasswordRequired: "dispNone",
             setOpen: false,
+            emailError: "dispNone",
+            contactError: "dispNone",
+            passwordError: "dispNone",
+            signupError: "dispNone",
         }
     }
 
@@ -110,6 +114,10 @@ class Header extends Component{
                 loginContactRequired: "dispNone",
                 login_passowrd: "",
                 loginPasswordRequired: "dispNone",
+                emailError: "dispNone",
+                contactError: "dispNone",
+                passwordError: "dispNone",
+                signupError: "dispNone",
             });
         }
     }
@@ -161,12 +169,49 @@ class Header extends Component{
     signupClickHandler = () => {
         this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
         this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
-        this.state.registerPassword === "" ? this.setState({ passwordRequired: "dispBlock" }) : this.setState({ passwordRequired: "dispNone" });
+        this.state.password === "" ? this.setState({ passwordRequired: "dispBlock" }) : this.setState({ passwordRequired: "dispNone" });
         this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
-        this.setState({
-            setOpen: true,
-            value: 0
-        });
+        this.setState({ emailError: "dispNone" , passwordError: "dispNone", contactError: "dispNone", signupError: "dispNone"});
+       
+        if(this.state.firstname !== "" && this.state.email !== "" && this.state.contact !== "" && this.state.password !== ""){
+            let dataSignup = JSON.stringify({
+                "contact_number": this.state.contact,
+                "email_address": this.state.email,
+                "first_name": this.state.firstname,
+                "last_name": this.state.lastname,
+                "password": this.state.password
+            })
+            let xhrSignup = new XMLHttpRequest();
+            let that = this;
+            xhrSignup.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    let code = JSON.parse(this.responseText).code;
+                    if(code === "SGR-002"){
+                        that.setState({ emailError: "dispBlock"});
+                    }
+                    if(code === "SGR-004"){
+                        that.setState({ passwordError: "dispBlock"});
+                    }
+                    if(code === "SGR-003"){
+                        that.setState({ contactError: "dispBlock"});
+                    }
+                    if(code === "SGR-001"){
+                        that.setState({ signupError: "dispBlock"});
+                    }
+                    if(JSON.parse(this.responseText).status === "CUSTOMER SUCCESSFULLY REGISTERED"){
+                        that.setState({
+                            setOpen: true,
+                            value: 0
+                        });
+                    }
+                    console.log(JSON.parse(this.responseText));
+                }
+            });
+            xhrSignup.open("POST", "http://localhost:8080/api/customer/signup");
+            xhrSignup.setRequestHeader("Content-Type", "application/json");
+            xhrSignup.setRequestHeader("Cache-Control", "no-cache");
+            xhrSignup.send(dataSignup);
+        }
     }
     
     render(){
@@ -233,6 +278,7 @@ class Header extends Component{
                     }
                     {this.state.value === 1 &&
                         <TabContainer>
+                            <div className="signup-tab">
                             <br />
                             <FormControl required>
                                 <InputLabel htmlFor="firstname">First Name</InputLabel>
@@ -241,35 +287,49 @@ class Header extends Component{
                                     <span className="red">required</span>
                                 </FormHelperText>
                             </FormControl>
-                            <br /><br />
+                            <br />
                             <FormControl >
                                 <InputLabel htmlFor="lastname">Last Name</InputLabel>
-                                <Input id="lastname" type="text" lastname={this.state.lastname} onChange={this.inputLastnameChangeHandler} />
+                                <Input id="lastname" type="text" lastname={this.state.lastname} onChange={this.inputLastNameChangeHandler} />
                             </FormControl>
-                            <br /><br />
+                            <br />
                             <FormControl required>
                                 <InputLabel htmlFor="email">Email</InputLabel>
                                 <Input id="email" type="text" email={this.state.email} onChange={this.inputEmailChangeHandler} />
                                 <FormHelperText className={this.state.emailRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
+                                <FormHelperText className={this.state.emailError}>
+                                    <span className="red">Invalid Email</span>
+                                </FormHelperText>
                             </FormControl>
-                            <br /><br />
+                            <br />
                             <FormControl required>
                                 <InputLabel htmlFor="password">Password</InputLabel>
                                 <Input id="password" type="password" password={this.state.password} onChange={this.inputPasswordChangeHandler} />
                                 <FormHelperText className={this.state.passwordRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
+                                <FormHelperText className={this.state.passwordError}>
+                                    <span className="red">Password must contain at least one capital letter, one small letter, one number, and one special character</span>
+                                </FormHelperText>
                             </FormControl>
-                            <br /><br />
+                            <br />
                             <FormControl required>
                                 <InputLabel htmlFor="contact_no">Contact No.</InputLabel>
                                 <Input id="contact" type="text" contact={this.state.contact} onChange={this.inputContactChangeHandler} />
                                 <FormHelperText className={this.state.contactRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
+                                <FormHelperText className={this.state.contactError}>
+                                    <span className="red">Contact No. must contain only numbers and must be 10 digits long</span>
+                                </FormHelperText>
                             </FormControl>
+                            <br/>
+                            <FormHelperText className={this.state.signupError}>
+                                <span className="red">This contact number is already registered! Try other contact number.</span>
+                            </FormHelperText>
+                            </div>
                             <br /><br />
                             <Button variant="contained" color="primary" onClick={this.signupClickHandler}>SIGNUP</Button>
                         </TabContainer>
