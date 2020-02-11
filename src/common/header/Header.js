@@ -83,9 +83,9 @@ class Header extends Component{
             passwordRequired: "dispNone",
             contact: "",
             contactRequired: "dispNone",
-            loginContact: "",
+            login_contact: "",
             loginContactRequired: "dispNone",
-            loginPassowrd: "",
+            login_passowrd: "",
             loginPasswordRequired: "dispNone",
         }
     }
@@ -93,7 +93,21 @@ class Header extends Component{
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
-         });
+            value: 0,
+            firstnameRequired: "dispNone",
+            firstname: "",
+            lastname: "",
+            email: "",
+            emailRequired: "dispNone",
+            password: "",
+            passwordRequired: "dispNone",
+            contact: "",
+            contactRequired: "dispNone",
+            login_contact: "",
+            loginContactRequired: "dispNone",
+            login_passowrd: "",
+            loginPasswordRequired: "dispNone",
+        });
     }
 
     closeModalHandler = () => {
@@ -125,11 +139,23 @@ class Header extends Component{
     }
 
     inputLoginContactChangeHandler = (e) => {
-        this.setState({ loginContact: e.target.value });
+        this.setState({ login_contact: e.target.value });
     }
 
-    inputLoginPassowrdChangeHandler = (e) => {
-        this.setState({ loginPassowrd: e.target.value });
+    inputLoginPasswordChangeHandler = (e) => {
+        this.setState({ login_passowrd: e.target.value });
+    }
+
+    loginClickHandler = () => {
+        this.state.login_contact === "" ? this.setState({ loginContactRequired: "dispBlock" }) : this.setState({ loginContactRequired: "dispNone" });
+        this.state.login_passowrd === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
+    }
+
+    signupClickHandler = () => {
+        this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
+        this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
+        this.state.registerPassword === "" ? this.setState({ passwordRequired: "dispBlock" }) : this.setState({ passwordRequired: "dispNone" });
+        this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
     }
 
     
@@ -178,7 +204,7 @@ class Header extends Component{
                             <br />
                             <FormControl required>
                                 <InputLabel htmlFor="loginContact">Contact No.</InputLabel>
-                                <Input id="loginContact" type="text" loginContact={this.state.loginContact} onChange={this.inputLoginContactChangeHandler} />
+                                <Input id="loginContact" type="text" login_contact={this.state.login_contact} onChange={this.inputLoginContactChangeHandler} />
                                 <FormHelperText className={this.state.loginContactRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -186,7 +212,7 @@ class Header extends Component{
                             <br /><br />
                             <FormControl required>
                                 <InputLabel htmlFor="loginPassword">Password</InputLabel>
-                                <Input id="loginPassword" type="text" loginPassword={this.state.loginPassword} onChange={this.inputLoginPasswordChangeHandler} />
+                                <Input id="loginPassword" type="password" login_password={this.state.login_password} onChange={this.inputLoginPasswordChangeHandler} />
                                 <FormHelperText className={this.state.loginPasswordRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -200,7 +226,7 @@ class Header extends Component{
                             <br />
                             <FormControl required>
                                 <InputLabel htmlFor="firstname">First Name</InputLabel>
-                                <Input id="firstname" type="text" firstname={this.state.firstname} onChange={this.inputFirstnameChangeHandler} />
+                                <Input id="firstname" type="text" firstname={this.state.firstname} onChange={this.inputFirstNameChangeHandler} />
                                 <FormHelperText className={this.state.firstnameRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -221,7 +247,7 @@ class Header extends Component{
                             <br /><br />
                             <FormControl required>
                                 <InputLabel htmlFor="password">Password</InputLabel>
-                                <Input id="password" type="text" password={this.state.password} onChange={this.inputPasswordChangeHandler} />
+                                <Input id="password" type="password" password={this.state.password} onChange={this.inputPasswordChangeHandler} />
                                 <FormHelperText className={this.state.passwordRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
