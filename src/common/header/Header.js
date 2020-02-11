@@ -6,6 +6,20 @@ import Input from '@material-ui/core/Input';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Modal from 'react-modal';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)'
+    }
+  };
 
 const styles = theme => ({
     search: {
@@ -35,13 +49,38 @@ const styles = theme => ({
     },
 });
 
+
 class Header extends Component{
+
+    constructor(){
+        super();
+        this.state = {
+            button:"Login",
+            modalIsOpen: false,
+            value: 0,
+        }
+    }
+
+    openModalHandler = () => {
+        this.setState({
+            modalIsOpen: true,
+         });
+    }
+
+    closeModalHandler = () => {
+        this.setState({ modalIsOpen: false });
+    }
+    
+    tabChangeHandler = (event, value) =>{
+        this.setState({value});
+    }
+    
     render(){
         const { classes } = this.props;
         return(
             <div>
                <header className="app-header">
-                   <div className="logo">
+                    <div className="logo">
                         <FastfoodIcon fontSize="large" htmlColor="white"/> 
                     </div>
                     <div className="search-box">
@@ -61,13 +100,25 @@ class Header extends Component{
                         </div>
                     </div>
                     <div className="login-button">
-                        <Button variant="contained" color="default" >
-                            <AccountCircleIcon style={{marginRight:"10px"}} /> Login
+                        <Button variant="contained" color="default" onClick={this.openModalHandler}>
+                            <AccountCircleIcon style={{marginRight:"10px"}} /> {this.state.button}
                         </Button> 
                     </div>
                </header>
+               <Modal 
+                    ariaHideApp={false} 
+                    isOpen={this.state.modalIsOpen} 
+                    contentLabel="Login" 
+                    onRequestClose={this.closeModalHandler}
+                    style={customStyles} >
+                    <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
+                        <Tab label="LOGIN" />
+                        <Tab label="SIGNUP"/>
+                    </Tabs>
+                </Modal>
             </div>
         );
     }
 }
+
 export default withStyles(styles)(Header);

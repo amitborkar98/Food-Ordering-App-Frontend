@@ -19,3 +19,12 @@
     margin-top: 10px;
     margin-right: 20px;
 }
+
+@media (max-width: 360px){
+    .app-header {
+        background-color:darkslategrey;
+        height: 260px;
+        display: flex;
+        flex-direction: column;
+    }
+}
