@@ -26,6 +26,11 @@
     padding: 0px 20px;
 }
 
+.login-tab{
+    display: flex;
+    flex-direction: column;
+    padding: 0px 20px;
+}
 
 .dispNone {
     display: none;

@@ -72,7 +72,7 @@ class Header extends Component{
     constructor(){
         super();
         this.state = {
-            button:"Login",
+            button: "Login",
             modalIsOpen: false,
             value: 0,
             firstnameRequired: "dispNone",
@@ -93,6 +93,10 @@ class Header extends Component{
             contactError: "dispNone",
             passwordError: "dispNone",
             signupError: "dispNone",
+            loginContactError: "dispNone",
+            loginPasswordError: "dispNone",
+            loginError: "dispNone",
+            loginSetOpen: false,
         }
     }
 
@@ -118,6 +122,9 @@ class Header extends Component{
                 contactError: "dispNone",
                 passwordError: "dispNone",
                 signupError: "dispNone",
+                loginContactError: "dispNone",
+                loginPasswordError: "dispNone",
+                loginError: "dispNone",
             });
         }
     }
@@ -164,6 +171,42 @@ class Header extends Component{
     loginClickHandler = () => {
         this.state.login_contact === "" ? this.setState({ loginContactRequired: "dispBlock" }) : this.setState({ loginContactRequired: "dispNone" });
         this.state.login_passowrd === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
+    
+        this.setState({ loginError: "dispNone", loginContactError: "dispNone", loginPasswordError: "dispNone" })
+        if(this.state.login_contact !== "" && this.state.login_passowrd !== ""){
+            let dataLogin = null;
+            let xhrLogin = new XMLHttpRequest();
+            let that = this;
+            xhrLogin.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    let code = JSON.parse(this.responseText).code;
+                    if(!that.state.login_contact.match(/^[0-9]+$/) || that.state.login_contact.length !== 10){
+                        that.setState({ loginContactError: "dispBlock"});
+                    }
+                    else if(code === "ATH-002"){
+                        that.setState({ loginPasswordError: "dispBlock"})
+                    }
+                    else if(code === "ATH-001"){
+                        that.setState({ loginError: "dispBlock"})
+                    }
+                    else{
+                        sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                        sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+                        that.setState({
+                            modalIsOpen: false,
+                            loginSetOpen: true,
+                            button: JSON.parse(this.responseText).first_name,
+                        });    
+                    }
+                    console.log(JSON.parse(this.responseText))
+                }
+            });
+            xhrLogin.open("POST", "http://localhost:8080/api/customer/login");
+            xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.login_contact + ":" + this.state.login_passowrd));
+            xhrLogin.setRequestHeader("Content-Type", "application/json");
+            xhrLogin.setRequestHeader("Cache-Control", "no-cache");
+            xhrLogin.send(dataLogin);
+        }
     }
 
     signupClickHandler = () => {
@@ -204,7 +247,6 @@ class Header extends Component{
                             value: 0
                         });
                     }
-                    console.log(JSON.parse(this.responseText));
                 }
             });
             xhrSignup.open("POST", "http://localhost:8080/api/customer/signup");
@@ -256,6 +298,7 @@ class Header extends Component{
                     </Tabs>
                     {this.state.value === 0 &&
                         <TabContainer>
+                            <div className="login-tab">
                             <br />
                             <FormControl required>
                                 <InputLabel htmlFor="loginContact">Contact No.</InputLabel>
@@ -263,8 +306,11 @@ class Header extends Component{
                                 <FormHelperText className={this.state.loginContactRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
+                                <FormHelperText className={this.state.loginContactError}>
+                                    <span className="red">Invalid Contact</span>
+                                </FormHelperText>
                             </FormControl>
-                            <br /><br />
+                            <br />
                             <FormControl required>
                                 <InputLabel htmlFor="loginPassword">Password</InputLabel>
                                 <Input id="loginPassword" type="password" login_password={this.state.login_password} onChange={this.inputLoginPasswordChangeHandler} />
@@ -272,7 +318,15 @@ class Header extends Component{
                                     <span className="red">required</span>
                                 </FormHelperText>
                             </FormControl>
-                            <br /><br />
+                            <br/>
+                            <FormHelperText className={this.state.loginError}>
+                                    <span className="red">This contact number has not been registered! </span>
+                            </FormHelperText>
+                            <FormHelperText className={this.state.loginPasswordError}>
+                                    <span className="red">Invalid Credentials</span>
+                            </FormHelperText>
+                            </div>
+                            <br />
                             <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
                         </TabContainer>
                     }
@@ -343,6 +397,15 @@ class Header extends Component{
                     open={this.state.setOpen}
                     autoHideDuration={6000}
                     message="Registered successfully! Please login now!"
+                />
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.loginSetOpen}
+                    autoHideDuration={100}
+                    message="Logged in successfully!"
                 />
             </div>
         );
