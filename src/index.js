@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import Header from './common/header/Header';
+import Controller from './screens/Controller';
+
 
 ReactDOM.render(
-    <Header/>, document.getElementById('root')
+    <Controller/>, document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
