@@ -14,6 +14,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const customStyles = {
     content : {
@@ -87,31 +88,37 @@ class Header extends Component{
             loginContactRequired: "dispNone",
             login_passowrd: "",
             loginPasswordRequired: "dispNone",
+            setOpen: false,
         }
     }
 
     openModalHandler = () => {
-        this.setState({
-            modalIsOpen: true,
-            value: 0,
-            firstnameRequired: "dispNone",
-            firstname: "",
-            lastname: "",
-            email: "",
-            emailRequired: "dispNone",
-            password: "",
-            passwordRequired: "dispNone",
-            contact: "",
-            contactRequired: "dispNone",
-            login_contact: "",
-            loginContactRequired: "dispNone",
-            login_passowrd: "",
-            loginPasswordRequired: "dispNone",
-        });
+        if(this.state.button === "Login"){
+            this.setState({
+                modalIsOpen: true,
+                value: 0,
+                firstnameRequired: "dispNone",
+                firstname: "",
+                lastname: "",
+                email: "",
+                emailRequired: "dispNone",
+                password: "",
+                passwordRequired: "dispNone",
+                contact: "",
+                contactRequired: "dispNone",
+                login_contact: "",
+                loginContactRequired: "dispNone",
+                login_passowrd: "",
+                loginPasswordRequired: "dispNone",
+            });
+        }
     }
 
     closeModalHandler = () => {
-        this.setState({ modalIsOpen: false });
+        this.setState({
+            modalIsOpen: false,
+            setOpen: false
+         });
     }
     
     tabChangeHandler = (event, value) =>{
@@ -156,8 +163,11 @@ class Header extends Component{
         this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
         this.state.registerPassword === "" ? this.setState({ passwordRequired: "dispBlock" }) : this.setState({ passwordRequired: "dispNone" });
         this.state.contact === "" ? this.setState({ contactRequired: "dispBlock" }) : this.setState({ contactRequired: "dispNone" });
+        this.setState({
+            setOpen: true,
+            value: 0
+        });
     }
-
     
     render(){
         const { classes } = this.props;
@@ -265,6 +275,15 @@ class Header extends Component{
                         </TabContainer>
                     }
                 </Modal>
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpen}
+                    autoHideDuration={6000}
+                    message="Registered successfully! Please login now!"
+                />
             </div>
         );
     }
