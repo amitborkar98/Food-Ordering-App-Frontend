@@ -1,5 +1,5 @@
 .app-header {
-    background-color: rgb(96,96,96);
+    background-color:darkslategrey;
     height: 60px;
 }
 
@@ -8,4 +8,14 @@
     float: left;
     margin-top: 10px;
     margin-left: 10px;
+}
+
+.search-box{
+    margin-left: 600px;
+}
+
+.login-button{
+    float: right;
+    margin-top: 10px;
+    margin-right: 20px;
 }
