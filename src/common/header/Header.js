@@ -50,11 +50,16 @@ const styles = theme => ({
       color: 'white',
     },
     inputRoot: {
-      color: 'white',
+      color: 'white',     
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
-      width:'250px'
+      width:'250px',
+    },
+    underline: {
+        '&:after': {
+            borderBottom: '2px solid white',
+        }
     },
 });
 
@@ -327,11 +332,12 @@ class Header extends Component{
                             <div className={classes.searchIcon}>
                                 <SearchIcon />
                             </div>
-                            <Input disableUnderline={false}
+                            <Input disableUnderline={false} 
                                 placeholder="Search by Restaurant Name"
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
+                                    underline: classes.underline,
                                 }}
                                 inputProps={{ 'aria-label': 'search' }}
                                 onChange={this.inputChangeHandler}
