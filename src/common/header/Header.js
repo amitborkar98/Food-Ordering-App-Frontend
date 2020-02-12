@@ -327,6 +327,7 @@ class Header extends Component{
                     <div className="logo">
                         <FastfoodIcon fontSize="large" htmlColor="white"/> 
                     </div>
+                    {this.props.search === "true"?
                     <div className="search-box">
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>
@@ -344,6 +345,7 @@ class Header extends Component{
                             />
                         </div>
                     </div>
+                    : "" }
                     <div className="login-button">
                         <Button variant="contained" color="default" onClick={this.openModalHandler}>
                             <AccountCircleIcon style={{marginRight:"5px"}} onClick={this.openMenuHandler}/> {this.state.button}
