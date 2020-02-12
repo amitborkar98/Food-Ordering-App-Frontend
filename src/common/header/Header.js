@@ -73,7 +73,7 @@ const StyledMenu = withStyles({
       }}
       transformOrigin={{
         vertical: 'top',
-        horizontal: 'center',
+        horizontal: 'left',
       }}
       {...props}
     />
@@ -81,6 +81,7 @@ const StyledMenu = withStyles({
 
   const StyledMenuItem = withStyles(theme => ({
     root: {
+        width:'100px'
     },
   }))(MenuItem);
 
@@ -127,6 +128,12 @@ class Header extends Component{
             loginError: "dispNone",
             loginSetOpen: false,
             type: null,
+        }
+    }
+
+    componentDidMount(){
+        if(sessionStorage.getItem('name') !== null){
+            this.setState({button: sessionStorage.getItem('name') });
         }
     }
 
@@ -242,7 +249,7 @@ class Header extends Component{
                         that.setState({ loginError: "dispBlock"})
                     }
                     else{
-                        sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+                        sessionStorage.setItem("name", JSON.parse(this.responseText).first_name);
                         sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
                         that.setState({
                             modalIsOpen: false,
@@ -333,7 +340,7 @@ class Header extends Component{
                     </div>
                     <div className="login-button">
                         <Button variant="contained" color="default" onClick={this.openModalHandler}>
-                            <AccountCircleIcon style={{marginRight:"10px"}} onClick={this.openMenuHandler}/> {this.state.button}
+                            <AccountCircleIcon style={{marginRight:"5px"}} onClick={this.openMenuHandler}/> {this.state.button}
                         </Button> 
                     </div>
                     <StyledMenu
@@ -344,7 +351,7 @@ class Header extends Component{
                         onClose={this.closeMenuHandler}
                         >
                         <StyledMenuItem>
-                            <ListItemText primary="Profile" onClick={this.profileHandler}/> 
+                            <ListItemText primary="My Profile" onClick={this.profileHandler}/> 
                         </StyledMenuItem>
                         <StyledMenuItem>
                             <ListItemText primary="Logout" onClick={this.logoutHandler} />
