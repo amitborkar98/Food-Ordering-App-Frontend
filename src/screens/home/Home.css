@@ -11,6 +11,10 @@
     margin: 20px 20px;
 }
 
+.card-content{
+    margin: 0px 10px;
+}
+
 .details{
     display: flex;
     flex-direction: row;
@@ -18,7 +22,7 @@
 }
 
 .ratings{
-    display:flex;
+    display: inline-flex;
     flex-direction: row;
     background-color: rgb(221, 208, 31);
     padding: 10px;

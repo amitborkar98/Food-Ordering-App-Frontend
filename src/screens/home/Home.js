@@ -56,11 +56,11 @@ class Home extends Component{
                                 <br/>
                                 <div className="details">
                                     <div className="ratings">
-                                    <i style={{color:"white"}} className="fa fa-star" aria-hidden="true"></i>
+                                        <i style={{color:"white", marginRight:"5px", marginTop:"4px"}} className="fa fa-star" aria-hidden="true"></i>
                                         <span style={{marginRight:"5px",color:"white" }}>{res.customer_rating}</span>
                                         <span style={{color:"white"}}>({res.number_customers_rated})</span>
                                     </div>     
-                                    <Typography variant="body1" component="p">
+                                    <Typography variant="body1" component="p" style={{marginTop:"8px"}}>
                                          <i className="fa fa-inr" aria-hidden="true"></i>
                                         <span>{res.average_price} for two</span>
                                     </Typography>      
