@@ -5,6 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+//import FontAwesome from 'react-fontawesome';
 
 class Home extends Component{
 
@@ -37,30 +38,33 @@ class Home extends Component{
             <div>
                 <Header search="true"/>
                 <div className="container">    
-                    <Card className="restaurant-cards">
+                    {this.state.restaurants.map(res => (
+                    <Card className="restaurant-cards" key={"res" + res.id}>
                         <CardContent>
-                            <CardMedia>
-
-                            </CardMedia>
+                            <CardMedia image={res.photo_URL} style={{height:"200px"}} />
+                            <br/>
                             <div className="card-content">
                                 <Typography variant="h5" component="h1">
-                                    <span> Restaurant name</span>
+                                    <span>{res.restaurant_name}</span>
                                 </Typography> 
                                 <br/>
                                 <Typography variant="body1" component="p">
-                                    <span>Categories, 1,2,3,4,5</span>
+                                    <span>{res.categories}</span>
                                 </Typography>
+                                <br/>
                                 <div className="details">
                                     <div>
-                                        Ratings <i className="fa fa-star" aria-hidden="true"></i>
+                                        <span>{res.customer_rating}</span><br/>
+                                        <span>({res.number_customers_rated})</span>
                                     </div>     
                                     <Typography variant="body1" component="p">
-                                        <span>Rs,1500for 2</span>
+                                        <span>{res.average_price} for two</span>
                                     </Typography>      
                                 </div>  
                            </div>
                         </CardContent>
                     </Card>
+                    ))}
                 </div>
             </div>
         );
