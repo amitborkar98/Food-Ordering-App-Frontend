@@ -11,7 +11,7 @@
 }
 
 .search-box{
-    margin-left: 600px;
+    margin:0px 600px;
 }
 
 .login-button{
@@ -42,4 +42,29 @@
 
 .red {
     color: red;
+}
+
+@media (max-width : 1300px){
+
+    .app-header {
+        background-color:darkslategrey;
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 10px;
+    }
+    
+    .logo{
+        color: #fff;  
+    }
+    
+    .search-box{
+        margin:0px 0px;
+    }
+    
+    .login-button{
+        float: right;
+        margin-top: 70px;
+    }
+
 }

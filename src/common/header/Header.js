@@ -32,7 +32,7 @@ const customStyles = {
 
 const styles = theme => ({
     search: {
-      position: 'relative',
+      position: 'absolute',
       borderRadius: '4px',
       width: '300px',
       float: 'left',
@@ -73,7 +73,7 @@ const StyledMenu = withStyles({
       }}
       transformOrigin={{
         vertical: 'top',
-        horizontal: 'left',
+        horizontal: 'center',
       }}
       {...props}
     />
