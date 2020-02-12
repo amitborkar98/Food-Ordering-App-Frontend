@@ -16,3 +16,10 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.ratings{
+    display:flex;
+    flex-direction: row;
+    background-color: rgb(221, 208, 31);
+    padding: 10px;
+}

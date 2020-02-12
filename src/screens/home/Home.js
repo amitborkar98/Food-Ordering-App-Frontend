@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 //import FontAwesome from 'react-fontawesome';
+import 'font-awesome/css/font-awesome.min.css';
 
 class Home extends Component{
 
@@ -38,6 +39,7 @@ class Home extends Component{
             <div>
                 <Header search="true"/>
                 <div className="container">    
+                   
                     {this.state.restaurants.map(res => (
                     <Card className="restaurant-cards" key={"res" + res.id}>
                         <CardContent>
@@ -53,18 +55,21 @@ class Home extends Component{
                                 </Typography>
                                 <br/>
                                 <div className="details">
-                                    <div>
-                                        <span>{res.customer_rating}</span><br/>
-                                        <span>({res.number_customers_rated})</span>
+                                    <div className="ratings">
+                                    <i style={{color:"white"}} className="fa fa-star" aria-hidden="true"></i>
+                                        <span style={{marginRight:"5px",color:"white" }}>{res.customer_rating}</span>
+                                        <span style={{color:"white"}}>({res.number_customers_rated})</span>
                                     </div>     
                                     <Typography variant="body1" component="p">
+                                         <i className="fa fa-inr" aria-hidden="true"></i>
                                         <span>{res.average_price} for two</span>
                                     </Typography>      
                                 </div>  
-                           </div>
+                            </div>
                         </CardContent>
                     </Card>
                     ))}
+                
                 </div>
             </div>
         );
