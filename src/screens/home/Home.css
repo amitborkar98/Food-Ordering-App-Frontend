@@ -1,0 +1,17 @@
+.container{
+    margin: 40px 60px;
+}
+
+.restaurant-cards{
+    width: 500px;
+}
+
+.card-content{
+    margin :10px;
+}
+
+.details{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
