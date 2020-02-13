@@ -14,6 +14,7 @@ class Details extends Component{
             restaurant: [],
             locality: "",
             category_names:[],
+            categories: [],
         }
     }
 
@@ -27,15 +28,16 @@ class Details extends Component{
                 that.setState({
                     restaurant: JSON.parse(this.responseText),
                     locality : JSON.parse(this.responseText).address.locality,
+                    categories: JSON.parse(this.responseText).categories
                 });      
-                let categories= JSON.parse(this.responseText).categories
-                for(let i in categories){
-                    let category = categories[i].category_name;
+                let categories_new= JSON.parse(this.responseText).categories
+                for(let i in categories_new){
+                    let category = categories_new[i].category_name;
                     categories_list.push(category);
                 }
                 that.setState({category_names: categories_list});
             }
-            console.log(that.state.restaurant);
+            console.log(that.state.categories);
         });
         xhr1.open("GET", "http://localhost:8080/api/api/restaurant/246165d2-a238-11e8-9077-720006ceb890");
         xhr1.send(data1);    
@@ -82,27 +84,33 @@ class Details extends Component{
                 </div>
 
                 <div className="main-content">
-                    <div className="items">
+                    {this.state.categories.map(cat => (
+                    <div className="items" key={"cat" + cat.id}>
                         <Typography variant="h6" component="h1">
-                            <span style={{color: "darkgrey"}}>Continental</span>
+                            <span style={{color: "darkgrey"}}>{cat.category_name}</span>
                         </Typography>
                         <Divider variant="fullWidth" />
-                        <div className="menu-item">
-                            <i style={{color:"red", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
-                            <i style={{color:"green", margin:"4px",  width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                        {cat.item_list.map(itm => (
+                        <div className="menu-item" key={"items" + itm.id}>
+                            {itm.item_type === "VEG" ? 
+                            <i style={{color:"green", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                            :
+                            <i style={{color:"red", margin:"4px",  width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                            }
                             <Typography variant="body1" component="p" style={{width:"70%"}}>
-                                <span>Item Name</span>
+                                <span>{itm.item_name}</span>
                             </Typography>
                             <div style={{width:"20%"}}>
                                 <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
-                                <span>100</span>
+                                <span>{itm.price}</span>
                             </div>
                             <AddIcon/>
                         </div>
+                        ))}
                     </div>
+                    ))}
 
                 </div>
-
             </div>
         );
     }
