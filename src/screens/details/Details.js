@@ -3,6 +3,8 @@ import Header from '../../common/header/Header';
 import './Details.css';
 import Typography from '@material-ui/core/Typography';
 import 'font-awesome/css/font-awesome.min.css';
+import Divider from '@material-ui/core/Divider';
+import AddIcon from '@material-ui/icons/Add';
 
 class Details extends Component{
  
@@ -79,6 +81,27 @@ class Details extends Component{
                     </div>                  
                 </div>
 
+                <div className="main-content">
+                    <div className="items">
+                        <Typography variant="h6" component="h1">
+                            <span style={{color: "darkgrey"}}>Continental</span>
+                        </Typography>
+                        <Divider variant="fullWidth" />
+                        <div className="menu-item">
+                            <i style={{color:"red", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                            <i style={{color:"green", margin:"4px",  width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                            <Typography variant="body1" component="p" style={{width:"70%"}}>
+                                <span>Item Name</span>
+                            </Typography>
+                            <div style={{width:"20%"}}>
+                                <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
+                                <span>100</span>
+                            </div>
+                            <AddIcon/>
+                        </div>
+                    </div>
+
+                </div>
 
             </div>
         );
