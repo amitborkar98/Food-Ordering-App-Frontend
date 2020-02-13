@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Profile from '../screens/profile/Profile';
 import Home from './home/Home';
+import Details from './details/Details';
 
 class Controller extends Component {
 
@@ -11,6 +12,7 @@ class Controller extends Component {
         <div className="main-container">
           <Route exact path='/' render={({history}, props) => <Home history={history} {...props} />} />
           <Route exact path='/profile' render={(props) => <Profile {...props} />} />
+          <Route exact path='/restaurant' render={(props) => <Details {...props} />} />
         </div>
       </Router>
     )
