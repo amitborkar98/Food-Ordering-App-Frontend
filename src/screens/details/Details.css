@@ -1,0 +1,27 @@
+.details-header{
+    height: 200px;
+    background-color: lightgrey;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.header-contents{
+    margin-left: 100px;
+}
+
+.average-ratings{
+    display: flex;
+    flex-direction: column;
+    margin-right: 450px;
+}
+
+.average-cost{
+    display: flex;
+    flex-direction: column;
+}
+
+.footers{
+    display: flex;
+    flex-direction: row;
+}
