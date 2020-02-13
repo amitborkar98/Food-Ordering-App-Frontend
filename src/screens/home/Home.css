@@ -34,3 +34,12 @@
 .dispBlock {
     display: block;
 }
+
+@media (max-width : 1024px){
+
+    .restaurant-cards{
+        width: 400px;
+        margin: 20px 20px;
+    }
+
+}

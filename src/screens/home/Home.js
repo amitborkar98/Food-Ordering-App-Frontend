@@ -15,7 +15,6 @@ class Home extends Component{
         this.state = {
             restaurants: [],
             no_result: 'dispNone',
-            new_list: [],
         }
     }
 
@@ -27,7 +26,6 @@ class Home extends Component{
             if(this.readyState === 4){     
                 that.setState({
                     restaurants: JSON.parse(this.responseText).restaurants,
-                    new_list : JSON.parse(this.responseText).restaurants,
                 });      
             }
         });
@@ -37,8 +35,19 @@ class Home extends Component{
 
     //function to get the filtered post from the Header component
      myCallback = (filteredPost) => {
-        if(filteredPost === "" || filteredPost === " " || filteredPost === "  " || filteredPost === "   " || filteredPost === "    "){
-            this.setState({ restaurants: this.state.new_list });
+        if(filteredPost === "" ){
+            let data1 = null;
+            let xhr1 = new XMLHttpRequest();
+            let that = this;
+            xhr1.addEventListener("readystatechange", function () {
+                if(this.readyState === 4){     
+                    that.setState({
+                        restaurants: JSON.parse(this.responseText).restaurants,
+                    });      
+                }
+            });
+            xhr1.open("GET", "http://localhost:8080/api/restaurant");
+            xhr1.send(data1);
         }
         else{
             let data1 = null;
