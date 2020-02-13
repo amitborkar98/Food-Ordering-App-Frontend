@@ -1,9 +1,8 @@
 .container{
-    margin: 20px 60px;
+    margin: 20px 70px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
 }
 
 .restaurant-cards{
@@ -22,8 +21,16 @@
 }
 
 .ratings{
-    display: inline-flex;
+    display: flex;
     flex-direction: row;
     background-color: rgb(221, 208, 31);
     padding: 10px;
+}
+
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
 }

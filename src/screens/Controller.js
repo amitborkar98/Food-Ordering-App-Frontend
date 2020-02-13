@@ -9,7 +9,7 @@ class Controller extends Component {
     return (
       <Router>
         <div className="main-container">
-          <Route exact path='/' render={(props) => <Home {...props} />} />
+          <Route exact path='/' render={({history}, props) => <Home history={history} {...props} />} />
           <Route exact path='/profile' render={(props) => <Profile {...props} />} />
         </div>
       </Router>

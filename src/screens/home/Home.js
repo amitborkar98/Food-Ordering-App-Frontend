@@ -14,6 +14,8 @@ class Home extends Component{
         super();
         this.state = {
             restaurants: [],
+            no_result: 'dispNone',
+            new_list: [],
         }
     }
 
@@ -25,19 +27,47 @@ class Home extends Component{
             if(this.readyState === 4){     
                 that.setState({
                     restaurants: JSON.parse(this.responseText).restaurants,
+                    new_list : JSON.parse(this.responseText).restaurants,
                 });      
-
-                console.log(JSON.parse(this.responseText).restaurants)
             }
         });
         xhr1.open("GET", "http://localhost:8080/api/restaurant");
         xhr1.send(data1);
     }
 
+    //function to get the filtered post from the Header component
+     myCallback = (filteredPost) => {
+        if(filteredPost === "" || filteredPost === " " || filteredPost === "  " || filteredPost === "   " || filteredPost === "    "){
+            this.setState({ restaurants: this.state.new_list });
+        }
+        else{
+            let data1 = null;
+            let xhr1 = new XMLHttpRequest();
+            let that = this;
+            xhr1.addEventListener("readystatechange", function () {
+                if(this.readyState === 4){     
+                    that.setState({
+                        restaurants: JSON.parse(this.responseText).restaurants,
+                    });
+                    if(that.state.restaurants.length === 0){
+                        that.setState({ no_result : 'dispBlock'})
+                    }
+                    if(that.state.restaurants.length !== 0){
+                        that.setState({no_result:'dispNone'})
+                    }
+                }     
+            });
+            if(filteredPost !== ""){
+                xhr1.open("GET", "http://localhost:8080/api/restaurant/name/"+ filteredPost);
+                xhr1.send(data1);
+            }
+        }
+    }
+
     render(){
         return(
             <div>
-                <Header search="true"/>
+                <Header search="true" callbackFromHome={this.myCallback} history={this.props.history}/>
                 <div className="container">    
                    
                     {this.state.restaurants.map(res => (
@@ -61,7 +91,7 @@ class Home extends Component{
                                         <span style={{color:"white"}}>({res.number_customers_rated})</span>
                                     </div>     
                                     <Typography variant="body1" component="p" style={{marginTop:"8px"}}>
-                                         <i className="fa fa-inr" aria-hidden="true"></i>
+                                        <i className="fa fa-inr" aria-hidden="true"></i>
                                         <span>{res.average_price} for two</span>
                                     </Typography>      
                                 </div>  
@@ -70,6 +100,9 @@ class Home extends Component{
                     </Card>
                     ))}
                 
+                <Typography variant="body1" component="p" className={this.state.no_result}>
+                    <span>No restaurant with the given name</span>
+                </Typography>      
                 </div>
             </div>
         );

@@ -200,6 +200,10 @@ class Header extends Component{
         this.setState({ type: null });
     }
  
+    inputSearchChangeHandler = (e) => {
+       this.props.callbackFromHome(e.target.value);
+    }
+
     tabChangeHandler = (event, value) =>{
         this.setState({value});
     }
@@ -341,7 +345,7 @@ class Header extends Component{
                                     underline: classes.underline,
                                 }}
                                 inputProps={{ 'aria-label': 'search' }}
-                                onChange={this.inputChangeHandler}
+                                onChange={this.inputSearchChangeHandler}
                             />
                         </div>
                     </div>
