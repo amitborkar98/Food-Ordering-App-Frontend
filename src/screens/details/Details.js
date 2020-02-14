@@ -21,7 +21,7 @@ class Details extends Component{
             locality: "",
             category_names:[],
             categories: [],
-            setOpen: false,
+            setOpenAdd: false,
             setOpenCheckout: false,
             setOpenLogin: false,
             setOpenItemQuantity: false,
@@ -84,7 +84,10 @@ class Details extends Component{
                             }
                             this.setState({ 
                                 setOpenItemQuantity: true,
-                                setOpen: false,
+                                setOpenAdd: false,
+                                setOpenCheckout: false,
+                                setOpenDecreaseItemQuantity: false,
+                                setOpenLogin: false,
                                 cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
                                 total_amount: total_price,
                             });
@@ -98,8 +101,11 @@ class Details extends Component{
                                 total_price = total_price + (total_list[i].price * total_list[i].quantity);
                             }
                             this.setState({ 
-                                setOpen: true,
                                 setOpenItemQuantity: false,
+                                setOpenAdd: true,
+                                setOpenCheckout: false,
+                                setOpenDecreaseItemQuantity: false,
+                                setOpenLogin: false,
                                 cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
                                 total_amount: total_price,
                             });
@@ -115,6 +121,35 @@ class Details extends Component{
         item_list.forEach(function(item){
             if(item.id === itemId){
                 item.quantity = item.quantity + 1;
+            }
+            let total_list = this.state.cart_items;
+            let total_price = 0;
+            for(let i in total_list){
+                total_price = total_price + (total_list[i].price * total_list[i].quantity);
+            }
+           this.setState({
+                cart_items: item_list,
+                total_amount: total_price,
+                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
+                setOpenItemQuantity: true,
+                setOpenAdd: false,
+                setOpenCheckout: false,
+                setOpenDecreaseItemQuantity: false,
+                setOpenLogin: false,
+           })
+        },this)
+    }
+
+    decreaseHandler = (itemId) => {
+        let item_list = this.state.cart_items;
+        item_list.forEach(function(item){
+            if(item.id === itemId){
+                if(item.quantity === 1){
+                    let index = this.state.cart_items.indexOf(item);
+                    this.state.cart_items.splice(index, 1);
+                }else{
+                    item.quantity = item.quantity - 1;
+                }
            }
             let total_list = this.state.cart_items;
             let total_price = 0;
@@ -124,25 +159,36 @@ class Details extends Component{
            this.setState({
                 cart_items: item_list,
                 total_amount: total_price,
-                setOpenItemQuantity: true,
-                setOpen: false,
+                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) - 1,
+                setOpenItemQuantity: false,
+                setOpenAdd: false,
+                setOpenCheckout: false,
+                setOpenDecreaseItemQuantity: true,
+                setOpenLogin: false,
            })
         },this)
-    }
-
-    decreaseHandler = (itemId) => {
-
+        if(this.state.cart_items.length === 0){
+            this.setState({ cart_item_qauntity : "0"})
+        }
     }
 
     checkoutHandler = () => {
         if(this.state.cart_items.length === 0){
             this.setState({
-                setOpenCheckout: true
+                setOpenCheckout: true,
+                setOpenAdd: false,
+                setOpenItemQuantity: false,
+                setOpenDecreaseItemQuantity: false,
+                setOpenLogin: false
             });
         }
-        if(sessionStorage.getItem("access-token") === null){
+        if(sessionStorage.getItem("access-token") === null && this.state.cart_items.length !== 0){
             this.setState({
-                setOpenLogin: true
+                setOpenLogin: true,
+                setOpenAdd: false,
+                setOpenItemQuantity: false,
+                setOpenDecreaseItemQuantity: false,
+                setOpenCheckout: false,
             });
         }
     }
@@ -274,7 +320,7 @@ class Details extends Component{
                     vertical: 'bottom',
                     horizontal: 'left',
                     }}
-                    open={this.state.setOpen}
+                    open={this.state.setOpenAdd}
                     autoHideDuration={1}
                     message="Item added to cart!"
                 />
