@@ -111,7 +111,23 @@ class Details extends Component{
     }
  
     increaseHandler = (itemId) => {
-
+        let item_list = this.state.cart_items;
+        item_list.forEach(function(item){
+            if(item.id === itemId){
+                item.quantity = item.quantity + 1;
+           }
+            let total_list = this.state.cart_items;
+            let total_price = 0;
+            for(let i in total_list){
+                total_price = total_price + (total_list[i].price * total_list[i].quantity);
+            }
+           this.setState({
+                cart_items: item_list,
+                total_amount: total_price,
+                setOpenItemQuantity: true,
+                setOpen: false,
+           })
+        },this)
     }
 
     decreaseHandler = (itemId) => {
@@ -216,9 +232,9 @@ class Details extends Component{
                                 {this.state.cart_items.map(itm => (
                                     <div className="cart-items" key={"cart-item" + itm.id}>
                                         {itm.item_type === "VEG" ? 
-                                        <i style={{color:"green", margin:"4px", width:"8%"}} className="fa fa-circle" aria-hidden="true"></i>
+                                        <i style={{color:"green", margin:"4px", width:"8%"}} className="fa fa-stop-circle-o" aria-hidden="true"></i>
                                         :
-                                        <i style={{color:"red", margin:"4px",  width:"8%"}} className="fa fa-circle" aria-hidden="true"></i>
+                                        <i style={{color:"red", margin:"4px",  width:"8%"}} className="fa fa-stop-circle-o" aria-hidden="true"></i>
                                         }
                                         <Typography variant="body1" component="p" style={{width:"60%", marginBottom:"5px"}}>
                                             <span style={{color:"darkgrey"}}>{itm.item_name}</span>
