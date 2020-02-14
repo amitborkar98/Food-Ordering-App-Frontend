@@ -76,18 +76,32 @@ class Details extends Component{
                 cat.item_list.forEach(function(item){
                     if(item.id === itemId)
                         if(this.state.cart_items.includes(item)){
+                            item.quantity = item.quantity + 1;
+                            let total_list = this.state.cart_items;
+                            let total_price = 0;
+                            for(let i in total_list){
+                                total_price = total_price + (total_list[i].price * total_list[i].quantity);
+                            }
                             this.setState({ 
                                 setOpenItemQuantity: true,
                                 setOpen: false,
-                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1
+                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
+                                total_amount: total_price,
                             });
                         }
                         else{
+                            item.quantity = item.quantity + 1;
                             this.state.cart_items.push(item);
+                            let total_list = this.state.cart_items;
+                            let total_price = 0;
+                            for(let i in total_list){
+                                total_price = total_price + (total_list[i].price * total_list[i].quantity);
+                            }
                             this.setState({ 
                                 setOpen: true,
                                 setOpenItemQuantity: false,
-                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1
+                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
+                                total_amount: total_price,
                             });
                         }
                 }, this);
@@ -96,6 +110,14 @@ class Details extends Component{
         console.log(this.state.cart_items)
     }
  
+    increaseHandler = (itemId) => {
+
+    }
+
+    decreaseHandler = (itemId) => {
+
+    }
+
     checkoutHandler = () => {
         if(this.state.cart_items.length === 0){
             this.setState({
@@ -202,9 +224,9 @@ class Details extends Component{
                                             <span style={{color:"darkgrey"}}>{itm.item_name}</span>
                                         </Typography>
                                         <div style={{width:"25%"}}>
-                                            <i style={{marginRight:"8px", cursor:"pointer"}} className="fa fa-minus" aria-hidden="true"></i>
+                                            <i style={{marginRight:"8px", cursor:"pointer"}} className="fa fa-minus" aria-hidden="true" onClick={()=>this.decreaseHandler(itm.id)}></i>
                                             <span style={{marginRight:"8px"}}>{itm.quantity}</span>
-                                            <i style={{cursor:"pointer"}} className="fa fa-plus" aria-hidden="true"></i>
+                                            <i style={{cursor:"pointer"}} className="fa fa-plus" aria-hidden="true" onClick={()=>this.increaseHandler(itm.id)}></i>
                                         </div>    
                                         <div style={{width:"15%"}}>
                                             <i style={{margin:"4px", color:"darkgrey"}} className="fa fa-inr" aria-hidden="true"></i>
