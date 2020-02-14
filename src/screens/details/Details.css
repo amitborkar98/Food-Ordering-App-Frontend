@@ -28,15 +28,41 @@
 
 .main-content{
     margin: 30px 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.item-container{
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 100px;
 }
 
 .items{
-    width: 40%;
     margin-bottom: 20px;
 }
 
 .menu-item{
-    margin-top: 10px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.checkout{
+    width: 40%;
+    margin-left: 100px;
+    height: 300px;
+    padding: 0px 20px;
+}
+
+.cart-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-header{
     display: flex;
     flex-direction: row;
 }

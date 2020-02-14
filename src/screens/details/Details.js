@@ -5,6 +5,12 @@ import Typography from '@material-ui/core/Typography';
 import 'font-awesome/css/font-awesome.min.css';
 import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
+import Snackbar from '@material-ui/core/Snackbar';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
 
 class Details extends Component{
  
@@ -15,6 +21,7 @@ class Details extends Component{
             locality: "",
             category_names:[],
             categories: [],
+            setOpen: false,
         }
     }
 
@@ -43,6 +50,10 @@ class Details extends Component{
         xhr1.send(data1);    
     }
  
+    addClickHandler = () => {
+        this.setState({ setOpen: true});
+    }
+    
     render(){
         return(
             <div>
@@ -84,33 +95,74 @@ class Details extends Component{
                 </div>
 
                 <div className="main-content">
-                    {this.state.categories.map(cat => (
-                    <div className="items" key={"cat" + cat.id}>
-                        <Typography variant="h6" component="h1">
-                            <span style={{color: "darkgrey"}}>{cat.category_name}</span>
-                        </Typography>
-                        <Divider variant="fullWidth" />
-                        {cat.item_list.map(itm => (
-                        <div className="menu-item" key={"items" + itm.id}>
-                            {itm.item_type === "VEG" ? 
-                            <i style={{color:"green", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
-                            :
-                            <i style={{color:"red", margin:"4px",  width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
-                            }
-                            <Typography variant="body1" component="p" style={{width:"70%"}}>
-                                <span>{itm.item_name}</span>
+                    <div className="item-container">
+                        {this.state.categories.map(cat => (
+                        <div className="items" key={"cat" + cat.id}>
+                            <Typography variant="h6" component="h1">
+                                <span style={{color: "darkgrey"}}>{cat.category_name}</span>
                             </Typography>
-                            <div style={{width:"20%"}}>
-                                <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
-                                <span>{itm.price}</span>
+                            <Divider variant="fullWidth" />
+                            {cat.item_list.map(itm => (
+                            <div className="menu-item" key={"items" + itm.id}>
+                                {itm.item_type === "VEG" ? 
+                                <i style={{color:"green", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                                :
+                                <i style={{color:"red", margin:"4px",  width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                                }
+                                <Typography variant="body1" component="p" style={{width:"70%"}}>
+                                    <span>{itm.item_name}</span>
+                                </Typography>
+                                <div style={{width:"20%"}}>
+                                    <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
+                                    <span>{itm.price}.00</span>
+                                </div>
+                                <AddIcon style={{cursor:"pointer"}} onClick={this.addClickHandler}/>
                             </div>
-                            <AddIcon/>
+                            ))}
                         </div>
                         ))}
                     </div>
-                    ))}
 
+                    <Card className="checkout">
+                        <CardContent>
+                            <div className="cart-container">
+                                <div className="cart-header">
+                                    <Badge badgeContent={2} color="primary">
+                                        <ShoppingCartIcon style={{marginTop:"5px"}}/>
+                                    </Badge>
+                                    <Typography variant="h6" component="h1">
+                                        <span style={{marginLeft:"30px", fontWeight:"bold"}}>My Cart</span>
+                                    </Typography>
+                                </div>
+                                <br/>
+                                <div className="cart-items-container">
+
+                                </div>
+                                <br/>
+                                <div className="cart-total-amount">
+                                    <Typography variant="body1" component="p">
+                                        <span style={{fontWeight:"bold"}}>TOTAL AMOUNT</span>
+                                    </Typography>
+                                </div>
+                                <br/>
+                                <Button variant="contained" color="primary">
+                                    CHECKOUT
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                
                 </div>
+
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpen}
+                    autoHideDuration={1}
+                    message="Item added to cart!"
+                />
             </div>
         );
     }
