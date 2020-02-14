@@ -22,6 +22,7 @@ class Details extends Component{
             category_names:[],
             categories: [],
             setOpen: false,
+            total_amount: 0.00,
         }
     }
 
@@ -44,9 +45,8 @@ class Details extends Component{
                 }
                 that.setState({category_names: categories_list});
             }
-            console.log(that.state.categories);
         });
-        xhr1.open("GET", "http://localhost:8080/api/api/restaurant/246165d2-a238-11e8-9077-720006ceb890");
+        xhr1.open("GET", "http://localhost:8080/api/api/restaurant/"+ this.props.match.params.id);
         xhr1.send(data1);    
     }
  
@@ -140,9 +140,11 @@ class Details extends Component{
                                 </div>
                                 <br/>
                                 <div className="cart-total-amount">
-                                    <Typography variant="body1" component="p">
+                                    <Typography variant="body1" component="p" style={{width:"95%"}}>
                                         <span style={{fontWeight:"bold"}}>TOTAL AMOUNT</span>
                                     </Typography>
+                                    <span><i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i></span>
+                                    <span style={{fontWeight:"bold"}}>{this.state.total_amount}</span>
                                 </div>
                                 <br/>
                                 <Button variant="contained" color="primary">
