@@ -22,7 +22,13 @@ class Details extends Component{
             category_names:[],
             categories: [],
             setOpen: false,
-            total_amount: 0.00,
+            setOpenCheckout: false,
+            setOpenLogin: false,
+            setOpenItemQuantity: false,
+            setOpenDecreaseItemQuantity: false,
+            total_amount: 0,
+            cart_item_qauntity: "0",
+            cart_items: [],
         }
     }
 
@@ -31,29 +37,78 @@ class Details extends Component{
         let xhr1 = new XMLHttpRequest();
         let that = this;
         let categories_list = [];
+        let quantity_list=[]
         xhr1.addEventListener("readystatechange", function () {
-            if(this.readyState === 4){     
-                that.setState({
-                    restaurant: JSON.parse(this.responseText),
-                    locality : JSON.parse(this.responseText).address.locality,
-                    categories: JSON.parse(this.responseText).categories
-                });      
+            if(this.readyState === 4){         
+                quantity_list = JSON.parse(this.responseText).categories;
+                for(let i in quantity_list){
+                   let new_list = quantity_list[i]
+                   for(let j in new_list){
+                       let new_list2 = new_list[j]
+                       if(typeof(new_list2) === "object"){
+                          for(let k in new_list2){
+                              new_list2[k].quantity = 0;
+                          }
+                       }
+                   }
+                }
                 let categories_new= JSON.parse(this.responseText).categories
                 for(let i in categories_new){
                     let category = categories_new[i].category_name;
                     categories_list.push(category);
                 }
-                that.setState({category_names: categories_list});
+                that.setState({
+                    category_names: categories_list,
+                    categories : quantity_list,
+                    restaurant: JSON.parse(this.responseText),
+                    locality : JSON.parse(this.responseText).address.locality,
+                });
             }
         });
         xhr1.open("GET", "http://localhost:8080/api/api/restaurant/"+ this.props.match.params.id);
         xhr1.send(data1);    
     }
  
-    addClickHandler = () => {
-        this.setState({ setOpen: true});
+    addClickHandler = (itemId, categoryId) => {
+        let categoriesList = this.state.categories;
+        categoriesList.forEach(function(cat){
+            if(cat.id === categoryId){
+                cat.item_list.forEach(function(item){
+                    if(item.id === itemId)
+                        if(this.state.cart_items.includes(item)){
+                            this.setState({ 
+                                setOpenItemQuantity: true,
+                                setOpen: false,
+                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1
+                            });
+                        }
+                        else{
+                            this.state.cart_items.push(item);
+                            this.setState({ 
+                                setOpen: true,
+                                setOpenItemQuantity: false,
+                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1
+                            });
+                        }
+                }, this);
+            }
+        }, this);
+        console.log(this.state.cart_items)
     }
-    
+ 
+    checkoutHandler = () => {
+        if(this.state.cart_items.length === 0){
+            this.setState({
+                setOpenCheckout: true
+            });
+        }
+        if(sessionStorage.getItem("access-token") === null){
+            this.setState({
+                setOpenLogin: true
+            });
+        }
+    }
+
     render(){
         return(
             <div>
@@ -97,13 +152,13 @@ class Details extends Component{
                 <div className="main-content">
                     <div className="item-container">
                         {this.state.categories.map(cat => (
-                        <div className="items" key={"cat" + cat.id}>
+                        <div className="items" key={"cats" + cat.id}>
                             <Typography variant="h6" component="h1">
                                 <span style={{color: "darkgrey"}}>{cat.category_name}</span>
                             </Typography>
                             <Divider variant="fullWidth" />
                             {cat.item_list.map(itm => (
-                            <div className="menu-item" key={"items" + itm.id}>
+                            <div className="menu-item" key={"menu-item" + itm.id}>
                                 {itm.item_type === "VEG" ? 
                                 <i style={{color:"green", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
                                 :
@@ -116,7 +171,7 @@ class Details extends Component{
                                     <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
                                     <span>{itm.price}.00</span>
                                 </div>
-                                <AddIcon style={{cursor:"pointer"}} onClick={this.addClickHandler}/>
+                                <AddIcon style={{cursor:"pointer"}} onClick={() => this.addClickHandler(itm.id, cat.id)}/>
                             </div>
                             ))}
                         </div>
@@ -127,7 +182,7 @@ class Details extends Component{
                         <CardContent>
                             <div className="cart-container">
                                 <div className="cart-header">
-                                    <Badge badgeContent={2} color="primary">
+                                    <Badge badgeContent={this.state.cart_item_qauntity} color="primary">
                                         <ShoppingCartIcon style={{marginTop:"5px"}}/>
                                     </Badge>
                                     <Typography variant="h6" component="h1">
@@ -136,18 +191,38 @@ class Details extends Component{
                                 </div>
                                 <br/>
                                 <div className="cart-items-container">
-
+                                {this.state.cart_items.map(itm => (
+                                    <div className="cart-items" key={"cart-item" + itm.id}>
+                                        {itm.item_type === "VEG" ? 
+                                        <i style={{color:"green", margin:"4px", width:"8%"}} className="fa fa-circle" aria-hidden="true"></i>
+                                        :
+                                        <i style={{color:"red", margin:"4px",  width:"8%"}} className="fa fa-circle" aria-hidden="true"></i>
+                                        }
+                                        <Typography variant="body1" component="p" style={{width:"60%", marginBottom:"5px"}}>
+                                            <span style={{color:"darkgrey"}}>{itm.item_name}</span>
+                                        </Typography>
+                                        <div style={{width:"25%"}}>
+                                            <i style={{marginRight:"8px", cursor:"pointer"}} className="fa fa-minus" aria-hidden="true"></i>
+                                            <span style={{marginRight:"8px"}}>{itm.quantity}</span>
+                                            <i style={{cursor:"pointer"}} className="fa fa-plus" aria-hidden="true"></i>
+                                        </div>    
+                                        <div style={{width:"15%"}}>
+                                            <i style={{margin:"4px", color:"darkgrey"}} className="fa fa-inr" aria-hidden="true"></i>
+                                            <span style={{color:"darkgrey"}}>{itm.price}.00</span>
+                                        </div>
+                                    </div>
+                                ))}
                                 </div>
                                 <br/>
                                 <div className="cart-total-amount">
-                                    <Typography variant="body1" component="p" style={{width:"95%"}}>
+                                    <Typography variant="body1" component="p" style={{width:"87%"}}>
                                         <span style={{fontWeight:"bold"}}>TOTAL AMOUNT</span>
                                     </Typography>
                                     <span><i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i></span>
-                                    <span style={{fontWeight:"bold"}}>{this.state.total_amount}</span>
+                                    <span style={{fontWeight:"bold"}}>{this.state.total_amount}.00</span>
                                 </div>
                                 <br/>
-                                <Button variant="contained" color="primary">
+                                <Button variant="contained" color="primary" onClick={this.checkoutHandler}>
                                     CHECKOUT
                                 </Button>
                             </div>
@@ -164,6 +239,42 @@ class Details extends Component{
                     open={this.state.setOpen}
                     autoHideDuration={1}
                     message="Item added to cart!"
+                />
+                 <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpenCheckout}
+                    autoHideDuration={1}
+                    message="Please add an item to your cart!"
+                />
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpenLogin}
+                    autoHideDuration={1}
+                    message="Please login first!"
+                />
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpenItemQuantity}
+                    autoHideDuration={1}
+                    message="Item quantity increased by 1!"
+                />
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpenDecreaseItemQuantity}
+                    autoHideDuration={1}
+                    message="Item decreased by 1!"
                 />
             </div>
         );
