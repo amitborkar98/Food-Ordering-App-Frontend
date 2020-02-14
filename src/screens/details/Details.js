@@ -11,6 +11,20 @@ import CardContent from '@material-ui/core/CardContent';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+import RemoveIcon from '@material-ui/icons/Remove';
+
+const styles = {
+    root: {
+        cursor:"pointer",
+        color:"grey",
+        padding: "4px",
+        '&:hover':{
+            backgroundColor: "lightgrey",
+            borderRadius: "25px"
+        }
+      },
+  };
 
 class Details extends Component{
  
@@ -113,7 +127,6 @@ class Details extends Component{
                 }, this);
             }
         }, this);
-        console.log(this.state.cart_items)
     }
  
     increaseHandler = (itemId) => {
@@ -194,9 +207,10 @@ class Details extends Component{
     }
 
     render(){
+        const { classes } = this.props;
         return(
             <div>
-                <Header/>
+                <Header history={this.props.history}/>
                 <div className="details-header">
                     <img src={this.state.restaurant.photo_URL} height="200px" width="300px" alt="name"/>  
                     <div className="header-contents">
@@ -246,7 +260,7 @@ class Details extends Component{
                                 {itm.item_type === "VEG" ? 
                                 <i style={{color:"green", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
                                 :
-                                <i style={{color:"red", margin:"4px",  width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
+                                <i style={{color:"red", margin:"4px", width:"5%"}} className="fa fa-circle" aria-hidden="true"></i>
                                 }
                                 <Typography variant="body1" component="p" style={{width:"70%"}}>
                                     <span>{itm.item_name}</span>
@@ -255,7 +269,7 @@ class Details extends Component{
                                     <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
                                     <span>{itm.price}.00</span>
                                 </div>
-                                <AddIcon style={{cursor:"pointer"}} onClick={() => this.addClickHandler(itm.id, cat.id)}/>
+                                <AddIcon className={classes.root} onClick={() => this.addClickHandler(itm.id, cat.id)}/>
                             </div>
                             ))}
                         </div>
@@ -286,7 +300,7 @@ class Details extends Component{
                                             <span style={{color:"darkgrey"}}>{itm.item_name}</span>
                                         </Typography>
                                         <div style={{width:"25%"}}>
-                                            <i style={{marginRight:"8px", cursor:"pointer"}} className="fa fa-minus" aria-hidden="true" onClick={()=>this.decreaseHandler(itm.id)}></i>
+                                            <i style={{marginRight:"8px", cursor:"pointer"}} className="fa fa-minus" aria-hidden="true" onClick={()=>this.decreaseHandler(itm.id)} />
                                             <span style={{marginRight:"8px"}}>{itm.quantity}</span>
                                             <i style={{cursor:"pointer"}} className="fa fa-plus" aria-hidden="true" onClick={()=>this.increaseHandler(itm.id)}></i>
                                         </div>    
@@ -364,5 +378,4 @@ class Details extends Component{
         );
     }
 }
-
-export default Details;
+export default withStyles(styles)(Details);
