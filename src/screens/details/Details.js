@@ -13,6 +13,8 @@ import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import RemoveIcon from '@material-ui/icons/Remove';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = {
     root: {
@@ -24,6 +26,19 @@ const styles = {
             borderRadius: "25px"
         }
       },
+      add:{
+          cursor:"pointer",
+        '&:hover':{
+            backgroundColor: "yellow",
+            borderRadius: "25px",
+        }
+      },  
+      minus:{
+        '&:hover':{
+            backgroundColor: "yellow",
+            borderRadius: "25px",
+         }
+    }
   };
 
 class Details extends Component{
@@ -158,6 +173,7 @@ class Details extends Component{
         item_list.forEach(function(item){
             if(item.id === itemId){
                 if(item.quantity === 1){
+                    item.quantity = item.quantity - 1;
                     let index = this.state.cart_items.indexOf(item);
                     this.state.cart_items.splice(index, 1);
                 }else{
@@ -183,6 +199,16 @@ class Details extends Component{
         if(this.state.cart_items.length === 0){
             this.setState({ cart_item_qauntity : "0"})
         }
+    }
+
+    snanckCloseHandler = () =>{
+        this.setState({
+            setOpenItemQuantity: false,
+            setOpenAdd: false,
+            setOpenCheckout: false,
+            setOpenDecreaseItemQuantity: false,
+            setOpenLogin: false,
+       })
     }
 
     checkoutHandler = () => {
@@ -299,10 +325,10 @@ class Details extends Component{
                                         <Typography variant="body1" component="p" style={{width:"60%", marginBottom:"5px"}}>
                                             <span style={{color:"darkgrey"}}>{itm.item_name}</span>
                                         </Typography>
-                                        <div style={{width:"25%"}}>
-                                            <i style={{marginRight:"8px", cursor:"pointer"}} className="fa fa-minus" aria-hidden="true" onClick={()=>this.decreaseHandler(itm.id)} />
+                                        <div style={{width:"25%", display:"flex", flexDirection:"row"}}>
+                                            <RemoveIcon className={classes.minus} fontSize="small" style={{marginRight:"8px", cursor:"pointer"}} onClick={()=>this.decreaseHandler(itm.id)} />
                                             <span style={{marginRight:"8px"}}>{itm.quantity}</span>
-                                            <i style={{cursor:"pointer"}} className="fa fa-plus" aria-hidden="true" onClick={()=>this.increaseHandler(itm.id)}></i>
+                                            <AddIcon fontSize="small" className={classes.add} onClick={()=>this.increaseHandler(itm.id)} />
                                         </div>    
                                         <div style={{width:"15%"}}>
                                             <i style={{margin:"4px", color:"darkgrey"}} className="fa fa-inr" aria-hidden="true"></i>
@@ -337,6 +363,15 @@ class Details extends Component{
                     open={this.state.setOpenAdd}
                     autoHideDuration={1}
                     message="Item added to cart!"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.snanckCloseHandler}
+                        >
+                        <CloseIcon />
+                        </IconButton>
+                      }
                 />
                  <Snackbar
                     anchorOrigin={{
@@ -346,6 +381,15 @@ class Details extends Component{
                     open={this.state.setOpenCheckout}
                     autoHideDuration={1}
                     message="Please add an item to your cart!"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.snanckCloseHandler}
+                        >
+                        <CloseIcon />
+                        </IconButton>
+                      }
                 />
                 <Snackbar
                     anchorOrigin={{
@@ -355,6 +399,15 @@ class Details extends Component{
                     open={this.state.setOpenLogin}
                     autoHideDuration={1}
                     message="Please login first!"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.snanckCloseHandler}
+                        >
+                        <CloseIcon />
+                        </IconButton>
+                      }
                 />
                 <Snackbar
                     anchorOrigin={{
@@ -364,6 +417,15 @@ class Details extends Component{
                     open={this.state.setOpenItemQuantity}
                     autoHideDuration={1}
                     message="Item quantity increased by 1!"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.snanckCloseHandler}
+                        >
+                        <CloseIcon />
+                        </IconButton>
+                      }
                 />
                 <Snackbar
                     anchorOrigin={{
@@ -373,6 +435,15 @@ class Details extends Component{
                     open={this.state.setOpenDecreaseItemQuantity}
                     autoHideDuration={1}
                     message="Item decreased by 1!"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.snanckCloseHandler}
+                        >
+                        <CloseIcon />
+                        </IconButton>
+                      }
                 />
             </div>
         );
