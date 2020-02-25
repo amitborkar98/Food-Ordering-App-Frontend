@@ -56,7 +56,7 @@ class Details extends Component{
             setOpenItemQuantity: false,
             setOpenDecreaseItemQuantity: false,
             total_amount: 0,
-            cart_item_qauntity: "0",
+            cart_item_qauntity: 0,
             cart_items: [],
         }
     }
@@ -117,7 +117,7 @@ class Details extends Component{
                                 setOpenCheckout: false,
                                 setOpenDecreaseItemQuantity: false,
                                 setOpenLogin: false,
-                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
+                                cart_item_qauntity: this.state.cart_item_qauntity + 1,
                                 total_amount: total_price,
                             });
                         }
@@ -135,7 +135,7 @@ class Details extends Component{
                                 setOpenCheckout: false,
                                 setOpenDecreaseItemQuantity: false,
                                 setOpenLogin: false,
-                                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
+                                cart_item_qauntity: this.state.cart_item_qauntity + 1,
                                 total_amount: total_price,
                             });
                         }
@@ -158,7 +158,7 @@ class Details extends Component{
            this.setState({
                 cart_items: item_list,
                 total_amount: total_price,
-                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) + 1,
+                cart_item_qauntity: this.state.cart_item_qauntity + 1,
                 setOpenItemQuantity: true,
                 setOpenAdd: false,
                 setOpenCheckout: false,
@@ -188,7 +188,7 @@ class Details extends Component{
            this.setState({
                 cart_items: item_list,
                 total_amount: total_price,
-                cart_item_qauntity: parseInt(this.state.cart_item_qauntity) - 1,
+                cart_item_qauntity: this.state.cart_item_qauntity - 1,
                 setOpenItemQuantity: false,
                 setOpenAdd: false,
                 setOpenCheckout: false,
@@ -197,7 +197,7 @@ class Details extends Component{
            })
         },this)
         if(this.state.cart_items.length === 0){
-            this.setState({ cart_item_qauntity : "0"})
+            this.setState({ cart_item_qauntity : 0})
         }
     }
 
@@ -306,7 +306,7 @@ class Details extends Component{
                         <CardContent>
                             <div className="cart-container">
                                 <div className="cart-header">
-                                    <Badge badgeContent={this.state.cart_item_qauntity} color="primary">
+                                    <Badge badgeContent={this.state.cart_item_qauntity} color="primary" showZero ={true} overlap="circle">
                                         <ShoppingCartIcon style={{marginTop:"5px"}}/>
                                     </Badge>
                                     <Typography variant="h6" component="h1">
