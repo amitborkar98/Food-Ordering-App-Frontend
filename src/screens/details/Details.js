@@ -221,7 +221,7 @@ class Details extends Component{
                 setOpenLogin: false
             });
         }
-        if(sessionStorage.getItem("access-token") === null && this.state.cart_items.length !== 0){
+        else if(sessionStorage.getItem("access-token") === null && this.state.cart_items.length !== 0){
             this.setState({
                 setOpenLogin: true,
                 setOpenAdd: false,
@@ -229,6 +229,9 @@ class Details extends Component{
                 setOpenDecreaseItemQuantity: false,
                 setOpenCheckout: false,
             });
+        }
+        else{
+            this.props.history.push('/checkout');
         }
     }
 
