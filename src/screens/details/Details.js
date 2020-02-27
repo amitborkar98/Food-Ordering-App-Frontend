@@ -231,7 +231,10 @@ class Details extends Component{
             });
         }
         else{
-            this.props.history.push('/checkout');
+            this.props.history.push({
+                pathname: '/checkout',
+                summary: this.state
+            })
         }
     }
 
