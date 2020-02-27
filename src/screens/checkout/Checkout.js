@@ -19,6 +19,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class Checkout extends Component{
 
@@ -32,6 +35,7 @@ class Checkout extends Component{
             address: [],
             addressId: "",
             paymentActive: false,
+            paymentCompleted: false,
             flat_no: "",
             locality: "",
             city: "",
@@ -44,7 +48,11 @@ class Checkout extends Component{
             stateRequired: "dispNone",
             stateList: [],
             pincodeError: "dispNone",
-            addressSavedMessage: "dispNone"
+            addressSavedMessage: "dispNone",
+            paymentList: [],
+            paymentId: "",
+            display: "grey",
+            summaryText: "dispNone",
         }
     }
     
@@ -79,7 +87,19 @@ class Checkout extends Component{
             }
         });
         xhr2.open("GET", "http://localhost:8080/api/states");
-        xhr2.send(data2);   
+        xhr2.send(data2); 
+        
+        let data3 = null;
+        let xhr3 = new XMLHttpRequest();
+        xhr3.addEventListener("readystatechange", function () {
+            if(this.readyState === 4){
+                that.setState({
+                   paymentList: JSON.parse(this.responseText).paymentMethods,
+                });
+            }
+        });
+        xhr3.open("GET", "http://localhost:8080/api/payment");
+        xhr3.send(data3); 
     }
 
     inputCityChangeHandler = (e) => {
@@ -187,6 +207,30 @@ class Checkout extends Component{
             xhrSave.setRequestHeader("Cache-Control", "no-cache");
             xhrSave.send(dataSave);
         }
+    }
+
+    paymentHandler = (e) =>{
+        this.setState({ 
+            paymentId: e.target.value,
+            display: "blue" 
+        });
+    }
+
+    finishHandler = () =>{
+        if(this.state.paymentId !== ""){
+            this.setState({
+                paymentCompleted: true,
+                paymentActive: false,
+                summaryText: "dispBlock"
+            });
+        }
+    }
+
+    detailsChangeHandler = () =>{
+        this.setState({ 
+            deliveryActive: true,
+            summaryText: "dispNone",
+        })
     }
 
     render(){
@@ -305,17 +349,36 @@ class Checkout extends Component{
                                 </StepContent>
                             </Step>
                            
-                            <Step active={this.state.paymentActive}>
+                            <Step active={this.state.paymentActive} completed={this.state.paymentCompleted}>
                                 <StepLabel> 
                                     <Typography variant="body1" component="h1">
                                         Payment
                                     </Typography>
                                 </StepLabel>
-                                <StepContent>
-                            
+                                <StepContent style={{padding: "20px"}}>
+                                    <Typography className={this.state.display} variant="h6" component="h1">
+                                        Select Mode of Payment
+                                    </Typography>
+                                    <FormControl component="fieldset">
+                                        <RadioGroup aria-label="payment" name="payment" value={this.state.paymentId} onChange={this.paymentHandler}>
+                                        {this.state.paymentList.map(pay => (
+                                        <FormControlLabel key={"pay"+pay.id} value={pay.id} control={<Radio />} label={pay.payment_name} />
+                                        ))}
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <br/> <br/> <br/>
+                                    <Button style={{marginRight:"10px", color:"grey"}}>BACK</Button>
+                                    <Button variant="contained" color="primary" onClick={this.finishHandler}>FINISH</Button>
                                 </StepContent>
                             </Step>
                         </Stepper>
+                        <div style={{marginTop:"30px", marginLeft:"30px"}} className={this.state.summaryText}>
+                            <Typography variant="h6" component="h1">
+                                View the summary and place your order now!
+                            </Typography>
+                            <br/>
+                            <Button style={{marginLeft:"20px"}} onClick={this.detailsChangeHandler}> CHANGE </Button>
+                        </div>
                     </div>
                     <div>
 
