@@ -32,3 +32,15 @@
     border-color: red;
     box-shadow: 5px 5px red; 
 }
+
+.new-address-container{
+    margin: 20px 10px;
+}
+
+.dispNone{
+    display: none;
+}
+
+.displBlock{
+    display: block;
+}
