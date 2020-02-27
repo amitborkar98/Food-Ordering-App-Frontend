@@ -260,6 +260,7 @@ class Header extends Component{
                     else{
                         sessionStorage.setItem("name", JSON.parse(this.responseText).first_name);
                         sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+                        sessionStorage.setItem("id", JSON.parse(this.responseText).id);
                         that.setState({
                             modalIsOpen: false,
                             loginSetOpen: true,
