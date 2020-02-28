@@ -338,7 +338,7 @@ class Details extends Component{
                                         </div>    
                                         <div style={{width:"15%"}}>
                                             <i style={{margin:"4px", color:"darkgrey"}} className="fa fa-inr" aria-hidden="true"></i>
-                                            <span style={{color:"darkgrey"}}>{itm.price}.00</span>
+                                            <span style={{color:"darkgrey"}}>{itm.price * itm.quantity}.00</span>
                                         </div>
                                     </div>
                                 ))}
@@ -348,8 +348,10 @@ class Details extends Component{
                                     <Typography variant="body1" component="p" style={{width:"87%"}}>
                                         <span style={{fontWeight:"bold"}}>TOTAL AMOUNT</span>
                                     </Typography>
-                                    <span><i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i></span>
-                                    <span style={{fontWeight:"bold"}}>{this.state.total_amount}.00</span>
+                                    <div>
+                                        <span><i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i></span>
+                                        <span style={{fontWeight:"bold"}}>{this.state.total_amount}.00</span>
+                                    </div>
                                 </div>
                                 <br/>
                                 <Button variant="contained" color="primary" onClick={this.checkoutHandler}>

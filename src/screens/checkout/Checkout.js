@@ -22,6 +22,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Divider from '@material-ui/core/Divider';
+import 'font-awesome/css/font-awesome.min.css';
 
 class Checkout extends Component{
 
@@ -233,6 +237,50 @@ class Checkout extends Component{
         })
     }
 
+    placeOrderHandler = () =>{
+        if(this.state.addressId === "" || this.state.paymentId === ""){
+            this.setState({ })
+        }
+        else{
+            let dataSave = JSON.stringify({
+                "address_id": "string",
+                "bill": 0,
+                "coupon_id": "string",
+                "discount": 0,
+                "item_quantities": [
+                    {
+                    "item_id": "string",
+                    "price": 0,
+                    "quantity": 0
+                    }
+                ],
+                "payment_id": "string",
+                "restaurant_id": "string"
+            })
+            let xhrSave = new XMLHttpRequest();
+            let that = this;
+            xhrSave.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    let code = JSON.parse(this.responseText).code;
+                    if(code === "SAR-002"){
+                        that.setState({ pincodeError: "dispBlock"});
+                    }
+                    if(JSON.parse(this.responseText).status === "ADDRESS SUCCESSFULLY REGISTERED"){
+                        that.setState({
+                             addressSavedMessage: "dispBlock",
+                        });
+                    }
+                }
+            });
+            xhrSave.open("POST", "http://localhost:8080/api/order");
+            xhrSave.setRequestHeader("Authorization", "Bearer "+ sessionStorage.getItem('access-token'));
+            xhrSave.setRequestHeader("Content-Type", "application/json");
+            xhrSave.setRequestHeader("Cache-Control", "no-cache");
+            xhrSave.send(dataSave);
+        }
+        
+    }
+
     render(){
         return(
             <div>
@@ -380,8 +428,53 @@ class Checkout extends Component{
                             <Button style={{marginLeft:"20px"}} onClick={this.detailsChangeHandler}> CHANGE </Button>
                         </div>
                     </div>
-                    <div>
-
+                    
+                    <div className="summary-card-container">
+                    <Card className="summary-checkout">
+                        <CardContent>
+                            <Typography variant="h4" component="h1">
+                                Summary
+                            </Typography>
+                            <br/><br/>
+                            <Typography style={{color:"grey"}} variant="h5" component="h1">
+                                {this.props.location.summary.restaurant.restaurant_name}
+                            </Typography>  
+                            <br/>
+                            <div className="summary-items-container">
+                            {this.props.location.summary.cart_items.map(itm => (
+                                <div className="summary-cart-items" key={"cart-item" + itm.id}>
+                                    {itm.item_type === "VEG" ? 
+                                    <i style={{color:"green", margin:"4px", width:"5%"}} className="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    :
+                                    <i style={{color:"red", margin:"4px",  width:"5%"}} className="fa fa-stop-circle-o" aria-hidden="true"></i>
+                                    }
+                                    <Typography variant="body1" component="p" style={{width:"50%", marginBottom:"5px"}}>
+                                        <span>{itm.item_name}</span>
+                                    </Typography>
+                                    <div style={{width:"25%"}}>
+                                        <span>{itm.quantity}</span>
+                                    </div>    
+                                    <div style={{width:"15%", display:"flex"}}>
+                                        <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
+                                        <span>{itm.price * itm.quantity}.00</span>                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <Divider variant="fullWidth" /> 
+                            <div className="summary-net-amount">
+                                <Typography variant="h6" component="h1">
+                                    Net Amount
+                                </Typography> 
+                                <div style={{marginTop:"4px"}}>
+                                    <span><i style={{margin:"4px",color:"darkgrey"}} className="fa fa-inr" aria-hidden="true"></i></span>
+                                    <span style={{fontWeight:"bold"}}>{this.props.location.summary.total_amount}.00</span>
+                                </div> 
+                            </div>
+                            <Button style={{width:"100%"}} variant="contained" color="primary" onClick={this.placeOrderHandler}>
+                                    PLACE ORDER
+                            </Button>
+                        </CardContent>
+                    </Card>
                     </div>
                 </div>
             </div>
