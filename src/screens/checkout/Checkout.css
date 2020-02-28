@@ -79,3 +79,22 @@
     color: darkgrey;
     margin-bottom: 5px;
 }
+
+@media (max-width:1025px){
+    .checkout-main-conatiner{
+        margin: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .steps{
+        width: 90%;
+    }
+
+    .summary-card-container{
+        width:90%;
+        margin-top: 60px;
+    }
+}

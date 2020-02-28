@@ -12,6 +12,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
@@ -26,6 +27,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import 'font-awesome/css/font-awesome.min.css';
+import Snackbar from '@material-ui/core/Snackbar';
 
 class Checkout extends Component{
 
@@ -57,6 +59,7 @@ class Checkout extends Component{
             paymentId: "",
             display: "grey",
             summaryText: "dispNone",
+            orderId: "",
         }
     }
     
@@ -239,36 +242,39 @@ class Checkout extends Component{
 
     placeOrderHandler = () =>{
         if(this.state.addressId === "" || this.state.paymentId === ""){
-            this.setState({ })
+            this.setState({ setOpenOrderError: true })
         }
         else{
+
+            let item_quantities = [];
+            let item = {};
+            for(let i in this.props.location.summary.cart_items){
+                item.item_id = this.props.location.summary.cart_items[i].id;
+                item.price = this.props.location.summary.cart_items[i].price;
+                item.quantity = this.props.location.summary.cart_items[i].quantity;
+                item_quantities.push(item);
+            } 
             let dataSave = JSON.stringify({
-                "address_id": "string",
-                "bill": 0,
-                "coupon_id": "string",
+                "address_id": this.state.addressId,
+                "bill": Math.random() * 10,
+                "coupon_id": "2ddf6284-ecd0-11e8-8eb2-f2801f1b9fd1",
                 "discount": 0,
-                "item_quantities": [
-                    {
-                    "item_id": "string",
-                    "price": 0,
-                    "quantity": 0
-                    }
-                ],
-                "payment_id": "string",
-                "restaurant_id": "string"
+                "item_quantities": item_quantities,
+                "payment_id": this.state.paymentId,
+                "restaurant_id": this.props.location.summary.restaurant.id
             })
             let xhrSave = new XMLHttpRequest();
             let that = this;
             xhrSave.addEventListener("readystatechange", function () {
                 if (this.readyState === 4) {
-                    let code = JSON.parse(this.responseText).code;
-                    if(code === "SAR-002"){
-                        that.setState({ pincodeError: "dispBlock"});
-                    }
-                    if(JSON.parse(this.responseText).status === "ADDRESS SUCCESSFULLY REGISTERED"){
+                    if(JSON.parse(this.responseText).status === "ORDER SUCCESSFULLY PLACED"){
                         that.setState({
-                             addressSavedMessage: "dispBlock",
+                            orderId: JSON.parse(this.responseText).id,
+                            setOpenOrderPlaced: true
                         });
+                    }
+                    else{
+                        that.setState({ setOpenOrderError: true })
                     }
                 }
             });
@@ -278,7 +284,13 @@ class Checkout extends Component{
             xhrSave.setRequestHeader("Cache-Control", "no-cache");
             xhrSave.send(dataSave);
         }
-        
+    }
+
+    snanckCloseHandler = () =>{
+        this.setState({
+            setOpenOrderError: false,
+            setOpenOrderPlaced: false,
+       })
     }
 
     render(){
@@ -456,8 +468,9 @@ class Checkout extends Component{
                                     </div>    
                                     <div style={{width:"15%", display:"flex"}}>
                                         <i style={{margin:"4px"}} className="fa fa-inr" aria-hidden="true"></i>
-                                        <span>{itm.price * itm.quantity}.00</span>                                        </div>
+                                        <span>{itm.price * itm.quantity}.00</span>                                        
                                     </div>
+                                </div>
                                 ))}
                             </div>
                             <Divider variant="fullWidth" /> 
@@ -471,12 +484,48 @@ class Checkout extends Component{
                                 </div> 
                             </div>
                             <Button style={{width:"100%"}} variant="contained" color="primary" onClick={this.placeOrderHandler}>
-                                    PLACE ORDER
+                                PLACE ORDER
                             </Button>
                         </CardContent>
                     </Card>
                     </div>
                 </div>
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpenOrderPlaced}
+                    autoHideDuration={1}
+                    message={"Order placed successfully! Your order ID is " + this.state.orderId}
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.snanckCloseHandler}
+                        >
+                        <CloseIcon />
+                        </IconButton>
+                      }
+                />
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    open={this.state.setOpenOrderError}
+                    autoHideDuration={1}
+                    message="‘Unable to place your order! Please try again!"
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            onClick={this.snanckCloseHandler}
+                        >
+                        <CloseIcon />
+                        </IconButton>
+                      }
+                />
             </div>
         );
     }
