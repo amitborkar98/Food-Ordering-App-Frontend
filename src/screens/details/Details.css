@@ -1,12 +1,12 @@
-.details-header{
+.details-heading{
     height: 200px;
-    background-color: lightgrey;
+    background-color: rgb(245, 244, 244);
     padding: 20px;
     display: flex;
     flex-direction: row;
 }
 
-.header-contents{
+.heading-contents{
     margin-left: 100px;
 }
 
@@ -70,6 +70,7 @@
 .cart-total-amount{
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
 }
 
 .cart-items{
@@ -80,59 +81,88 @@
 
 @media (max-width:1025px){
 
-    .details-header{
+    .details-heading{
         height: 400px;
-        background-color: lightgrey;
+        width: 100%;
+        background-color: rgb(245, 244, 244);
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
     }
 
-    .header-contents{
+    .heading-contents{
+        margin-left: 0px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
     }
 
     .footers{
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
     }
 
     .average-ratings{
+        margin-right: 10px;
         display: flex;
         flex-direction: column;
-       
+        align-items: center;
     }
     
     .average-cost{
         display: flex;
         flex-direction: column;
+        align-items: center;
+        margin-left: 10px;
     }
     
+
     .main-content{
-        margin-top: 40px;
+        margin: 30px 40px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+   
+    .item-container{
+        display: flex;
+        flex-direction: column;
         width: 100%;
     }
-    
-    .item-container{
-        width: 100%;
+
+   .items{
+    margin-bottom: 20px;
+}
+
+    .menu-item{
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .checkout{
+        margin-top: 80px;
+        padding: 0px 20px;
+        width: 60%;
+    }
+
+    .cart-container{
         display: flex;
         flex-direction: column;
     }
-   
-    .checkout{
-        width: 50%;
-        margin-top: 50px;
-        padding: 0px 20px;
+
+    .cart-header{
+        display: flex;
+        flex-direction: row;
     }
 
-    
+    .cart-total-amount{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .cart-items{
+        display: flex;
+        flex-direction: row;
+    }
 }

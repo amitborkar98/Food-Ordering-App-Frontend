@@ -65,10 +65,12 @@ class Checkout extends Component{
     }
     
     UNSAFE_componentWillMount(){
+        // if the page is refreshed, redirect to the home page
         if(this.props.location.summary === undefined){
             this.props.history.push('/')
         }
         else{
+            //to get the address
             let data1 = null;
             let xhr1 = new XMLHttpRequest();
             let that = this;
@@ -76,6 +78,7 @@ class Checkout extends Component{
             xhr1.addEventListener("readystatechange", function () {
                 if(this.readyState === 4){
                     addressList = JSON.parse(this.responseText).addresses;
+                    // add the selectIcon and selectAddress property to the object
                     for(let i in addressList){
                        addressList[i].selectIcon = "";
                        addressList[i].selectAddress = "";
@@ -89,6 +92,7 @@ class Checkout extends Component{
             xhr1.setRequestHeader("Authorization", "Bearer "+ sessionStorage.getItem('access-token'));
             xhr1.send(data1);   
             
+            //to get the states
             let data2 = null;
             let xhr2 = new XMLHttpRequest();
             xhr2.addEventListener("readystatechange", function () {
@@ -101,6 +105,7 @@ class Checkout extends Component{
             xhr2.open("GET", "http://localhost:8080/api/states");
             xhr2.send(data2); 
             
+            //to get the payments
             let data3 = null;
             let xhr3 = new XMLHttpRequest();
             xhr3.addEventListener("readystatechange", function () {
@@ -137,6 +142,7 @@ class Checkout extends Component{
 
     tabChangeHandler = (event, value) =>{
         this.setState({value});
+        //if the tab is changed, call the address api again and update the state address
         let data1 = null;
         let that = this;
         let xhr1 = new XMLHttpRequest();
@@ -158,11 +164,13 @@ class Checkout extends Component{
         xhr1.send(data1);   
     }
 
+    //to select the address
     selectHandler = (addressId) =>{
         let addressList = this.state.address;
         for(let i in addressList){
             addressList[i].selectIcon = "";
             addressList[i].selectAddress = "";
+            //if the selected addressid is qeual to the adressId update the states
             if(addressList[i].id === addressId){
                addressList[i].selectIcon = "green";
                addressList[i].selectAddress = "select"
@@ -174,7 +182,9 @@ class Checkout extends Component{
         }
     }
 
+    //to go to the payment step
     addressNextHandler = () =>{
+        // to check if the address is selcted
         if(this.state.addressId !== ""){
             this.setState({ 
                 deliveryCompleted: true,
@@ -184,6 +194,7 @@ class Checkout extends Component{
         }  
     }
 
+    //to save the address
     saveAddressHandler = () =>{
         this.state.flat_no === "" ? this.setState({ flatNoRequired: "dispBlock" }) : this.setState({ flatNoRequired: "dispNone" });
         this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
@@ -222,6 +233,7 @@ class Checkout extends Component{
         }
     }
 
+    //to select the payment
     paymentHandler = (e) =>{
         this.setState({ 
             paymentId: e.target.value,
@@ -229,7 +241,9 @@ class Checkout extends Component{
         });
     }
 
+    //to finish the details section
     finishHandler = () =>{
+        //to check if the payment is elected
         if(this.state.paymentId !== ""){
             this.setState({
                 paymentCompleted: true,
@@ -239,6 +253,7 @@ class Checkout extends Component{
         }
     }
 
+    //to change the details
     detailsChangeHandler = () =>{
         this.setState({ 
             deliveryActive: true,
@@ -246,7 +261,9 @@ class Checkout extends Component{
         })
     }
 
+    //to place the order
     placeOrderHandler = () =>{
+        // to check if the address and payment are selected
         if(this.state.addressId === "" || this.state.paymentId === ""){
             this.setState({ setOpenOrderError: true })
         }
@@ -291,6 +308,7 @@ class Checkout extends Component{
         }
     }
 
+    //to close the snackbar
     snanckCloseHandler = () =>{
         this.setState({
             setOpenOrderError: false,

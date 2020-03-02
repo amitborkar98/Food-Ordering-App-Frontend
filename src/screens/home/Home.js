@@ -35,6 +35,7 @@ class Home extends Component{
 
     //function to get the filtered post from the Header component
      myCallback = (filteredPost) => {
+        //if the search field is empty display the restaurants as it were on the home page
         if(filteredPost === "" ){
             let data1 = null;
             let xhr1 = new XMLHttpRequest();
@@ -49,6 +50,7 @@ class Home extends Component{
             xhr1.open("GET", "http://localhost:8080/api/restaurant");
             xhr1.send(data1);
         }
+        //else display the resturants that are fetched from the /api/restaurant/name/ api
         else{
             let data1 = null;
             let xhr1 = new XMLHttpRequest();
@@ -73,6 +75,7 @@ class Home extends Component{
         }
     }
 
+    //to go the details page of the restaurant
     restaurantClickHandler = (restaurantId) =>{
         this.props.history.push('restaurant/' + restaurantId);
     }

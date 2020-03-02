@@ -142,6 +142,7 @@ class Header extends Component{
         }
     }
 
+    //to oprn the modal
     openModalHandler = () => {
         if(this.state.button === "Login"){
             this.setState({
@@ -171,6 +172,7 @@ class Header extends Component{
         }
     }
 
+    //to close the modal
     closeModalHandler = () => {
         this.setState({
             modalIsOpen: false,
@@ -178,12 +180,14 @@ class Header extends Component{
          });
     }
 
+    //to open the menu
     openMenuHandler = (e) => {
         if(this.state.button !== "Login"){
             this.setState({ type: e.currentTarget });
         }
     }
 
+    //to logout
     logoutHandler = () => {
         sessionStorage.clear();
         this.setState({ 
@@ -192,10 +196,12 @@ class Header extends Component{
         });
     }
 
+    //to go to the profile page
     profileHandler = () => {
         this.props.history.push('/profile');
     }
 
+    //to close the menu
     closeMenuHandler = () => {
         this.setState({ type: null });
     }
@@ -236,7 +242,9 @@ class Header extends Component{
         this.setState({ login_passowrd: e.target.value });
     }
 
+    //to login
     loginClickHandler = () => {
+        //check if the fields are empty
         this.state.login_contact === "" ? this.setState({ loginContactRequired: "dispBlock" }) : this.setState({ loginContactRequired: "dispNone" });
         this.state.login_passowrd === "" ? this.setState({ loginPasswordRequired: "dispBlock" }) : this.setState({ loginPasswordRequired: "dispNone" });
     
@@ -248,6 +256,7 @@ class Header extends Component{
             xhrLogin.addEventListener("readystatechange", function () {
                 if (this.readyState === 4) {
                     let code = JSON.parse(this.responseText).code;
+                    //to check if the phone number is valid
                     if(!that.state.login_contact.match(/^[0-9]+$/) || that.state.login_contact.length !== 10){
                         that.setState({ loginContactError: "dispBlock"});
                     }
@@ -257,6 +266,7 @@ class Header extends Component{
                     else if(code === "ATH-001"){
                         that.setState({ loginError: "dispBlock"})
                     }
+                    //set the session staorage items and login the customer
                     else{
                         sessionStorage.setItem("name", JSON.parse(this.responseText).first_name);
                         sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
@@ -278,6 +288,7 @@ class Header extends Component{
     }
 
     signupClickHandler = () => {
+        //to check if the fields are empty
         this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) : this.setState({ firstnameRequired: "dispNone" });
         this.state.email === "" ? this.setState({ emailRequired: "dispBlock" }) : this.setState({ emailRequired: "dispNone" });
         this.state.password === "" ? this.setState({ passwordRequired: "dispBlock" }) : this.setState({ passwordRequired: "dispNone" });

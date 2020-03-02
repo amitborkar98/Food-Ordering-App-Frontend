@@ -43,4 +43,11 @@
         margin: 20px 20px;
     }
 
+    .details{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
 }

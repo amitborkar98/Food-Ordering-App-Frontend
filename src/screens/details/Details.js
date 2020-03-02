@@ -20,7 +20,6 @@ const styles = {
     root: {
         cursor:"pointer",
         color:"grey",
-        padding: "4px",
         '&:hover':{
             backgroundColor: "lightgrey",
             borderRadius: "25px"
@@ -69,16 +68,19 @@ class Details extends Component{
         let quantity_list=[]
         xhr1.addEventListener("readystatechange", function () {
             if(this.readyState === 4){         
+                //store the response text in the quantity list
                 quantity_list = JSON.parse(this.responseText).categories;
                 for(let i in quantity_list){
                    let new_list = quantity_list[i]
                    for(let j in new_list){
                        let new_list2 = new_list[j]
+                       //check if the datatype is object
                        if(typeof(new_list2) === "object"){
-                          for(let k in new_list2){
-                              new_list2[k].quantity = 0;
-                          }
-                       }
+                            // add the quantity for each menu-iten
+                            for(let k in new_list2){
+                                new_list2[k].quantity = 0;
+                            }
+                        }
                    }
                 }
                 let categories_new= JSON.parse(this.responseText).categories
@@ -98,16 +100,20 @@ class Details extends Component{
         xhr1.send(data1);    
     }
  
+    //to add the items in the cart
     addClickHandler = (itemId, categoryId) => {
         let categoriesList = this.state.categories;
         categoriesList.forEach(function(cat){
             if(cat.id === categoryId){
                 cat.item_list.forEach(function(item){
                     if(item.id === itemId)
+                        // check if the item is already present in the cart
                         if(this.state.cart_items.includes(item)){
+                            // update the quantity by 1
                             item.quantity = item.quantity + 1;
                             let total_list = this.state.cart_items;
                             let total_price = 0;
+                            // update the total price
                             for(let i in total_list){
                                 total_price = total_price + (total_list[i].price * total_list[i].quantity);
                             }
@@ -121,11 +127,14 @@ class Details extends Component{
                                 total_amount: total_price,
                             });
                         }
+                        // else add the item to the cart
                         else{
+                            // update the quantity by 1
                             item.quantity = item.quantity + 1;
                             this.state.cart_items.push(item);
                             let total_list = this.state.cart_items;
                             let total_price = 0;
+                            // update the total price
                             for(let i in total_list){
                                 total_price = total_price + (total_list[i].price * total_list[i].quantity);
                             }
@@ -144,14 +153,17 @@ class Details extends Component{
         }, this);
     }
  
+    //to inccrease the quantity in the cart
     increaseHandler = (itemId) => {
         let item_list = this.state.cart_items;
         item_list.forEach(function(item){
+            //check if the given item id is equal to the itemId
             if(item.id === itemId){
                 item.quantity = item.quantity + 1;
             }
             let total_list = this.state.cart_items;
             let total_price = 0;
+            // update the total price
             for(let i in total_list){
                 total_price = total_price + (total_list[i].price * total_list[i].quantity);
             }
@@ -168,20 +180,24 @@ class Details extends Component{
         },this)
     }
 
+    //decrease the quantity in the cart
     decreaseHandler = (itemId) => {
         let item_list = this.state.cart_items;
         item_list.forEach(function(item){
             if(item.id === itemId){
+                //if the item quantity is 1, remove that item from the cart
                 if(item.quantity === 1){
                     item.quantity = item.quantity - 1;
                     let index = this.state.cart_items.indexOf(item);
                     this.state.cart_items.splice(index, 1);
+                //else decrease the item quantity
                 }else{
                     item.quantity = item.quantity - 1;
                 }
            }
             let total_list = this.state.cart_items;
             let total_price = 0;
+            // update the total price
             for(let i in total_list){
                 total_price = total_price + (total_list[i].price * total_list[i].quantity);
             }
@@ -196,11 +212,13 @@ class Details extends Component{
                 setOpenLogin: false,
            })
         },this)
+        //if the cart is empty
         if(this.state.cart_items.length === 0){
             this.setState({ cart_item_qauntity : 0})
         }
     }
 
+    //closte the snackbar
     snanckCloseHandler = () =>{
         this.setState({
             setOpenItemQuantity: false,
@@ -211,7 +229,9 @@ class Details extends Component{
        })
     }
 
+    //to naviagte to the checkout page
     checkoutHandler = () => {
+        // check if the cart is empty
         if(this.state.cart_items.length === 0){
             this.setState({
                 setOpenCheckout: true,
@@ -221,6 +241,7 @@ class Details extends Component{
                 setOpenLogin: false
             });
         }
+        // check if the customer is logged in
         else if(sessionStorage.getItem("access-token") === null && this.state.cart_items.length !== 0){
             this.setState({
                 setOpenLogin: true,
@@ -230,6 +251,7 @@ class Details extends Component{
                 setOpenCheckout: false,
             });
         }
+        //navigate to the checkout page and pass the state as props
         else{
             this.props.history.push({
                 pathname: '/checkout',
@@ -243,9 +265,9 @@ class Details extends Component{
         return(
             <div>
                 <Header history={this.props.history}/>
-                <div className="details-header">
+                <div className="details-heading">
                     <img src={this.state.restaurant.photo_URL} height="200px" width="300px" alt="name"/>  
-                    <div className="header-contents">
+                    <div className="heading-contents">
                         <Typography variant="h4" component="h1" style={{marginBottom: "10px"}}>
                             <span style={{fontWeight:"bold"}}>{this.state.restaurant.restaurant_name}</span>
                         </Typography>
@@ -261,10 +283,10 @@ class Details extends Component{
                                     <i style={{marginRight:"5px"}} className="fa fa-star" aria-hidden="true"></i>
                                     {this.state.restaurant.customer_rating}
                                 </div>
-                                <span style={{color:"darkgrey", fontSize:"small"}}>AVERAGE RATINGS BY</span>
+                                <span style={{color:"lightgrey", fontSize:"small"}}>AVERAGE RATINGS BY</span>
                                 <div>
-                                    <span style={{color:"darkgrey", fontSize:"small", fontWeight:"bolder"}}>{this.state.restaurant.number_customers_rated}</span>
-                                    <span style={{color:"darkgrey", fontSize:"small", marginLeft: "5px"}}>CUSTOMERS</span>
+                                    <span style={{color:"lightgrey", fontSize:"small", fontWeight:"bolder"}}>{this.state.restaurant.number_customers_rated}</span>
+                                    <span style={{color:"lightgrey", fontSize:"small", marginLeft: "5px"}}>CUSTOMERS</span>
                                 </div>
                             </div>
                             <div className="average-cost">
@@ -272,8 +294,8 @@ class Details extends Component{
                                     <i style={{marginRight:"5px"}} className="fa fa-inr" aria-hidden="true"></i>
                                     {this.state.restaurant.average_price}
                                 </div>
-                                <span style={{color:"darkgrey", fontSize:"small"}}>AVERAGE COST FOR</span>
-                                <span style={{color:"darkgrey", fontSize:"small"}}>TWO PEOPLE</span>
+                                <span style={{color:"lightgrey", fontSize:"small"}}>AVERAGE COST FOR</span>
+                                <span style={{color:"lightgrey", fontSize:"small"}}>TWO PEOPLE</span>
                             </div>
                         </div>
                     </div>                  
@@ -345,7 +367,7 @@ class Details extends Component{
                                 </div>
                                 <br/>
                                 <div className="cart-total-amount">
-                                    <Typography variant="body1" component="p" style={{width:"87%"}}>
+                                    <Typography variant="body1" component="p" >
                                         <span style={{fontWeight:"bold"}}>TOTAL AMOUNT</span>
                                     </Typography>
                                     <div>
@@ -360,7 +382,6 @@ class Details extends Component{
                             </div>
                         </CardContent>
                     </Card>
-                
                 </div>
 
                 <Snackbar
