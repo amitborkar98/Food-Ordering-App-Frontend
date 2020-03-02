@@ -60,53 +60,59 @@ class Checkout extends Component{
             display: "grey",
             summaryText: "dispNone",
             orderId: "",
+            type: null,
         }
     }
     
     UNSAFE_componentWillMount(){
-        let data1 = null;
-        let xhr1 = new XMLHttpRequest();
-        let that = this;
-        let addressList = [];
-        xhr1.addEventListener("readystatechange", function () {
-            if(this.readyState === 4){
-                addressList = JSON.parse(this.responseText).addresses;
-                for(let i in addressList){
-                   addressList[i].selectIcon = "";
-                   addressList[i].selectAddress = "";
+        if(this.props.location.summary === undefined){
+            this.props.history.push('/')
+        }
+        else{
+            let data1 = null;
+            let xhr1 = new XMLHttpRequest();
+            let that = this;
+            let addressList = [];
+            xhr1.addEventListener("readystatechange", function () {
+                if(this.readyState === 4){
+                    addressList = JSON.parse(this.responseText).addresses;
+                    for(let i in addressList){
+                       addressList[i].selectIcon = "";
+                       addressList[i].selectAddress = "";
+                    }
+                    that.setState({
+                       address: addressList,
+                    });
                 }
-                that.setState({
-                   address: addressList,
-                });
-            }
-        });
-        xhr1.open("GET", "http://localhost:8080/api/address/customer");
-        xhr1.setRequestHeader("Authorization", "Bearer "+ sessionStorage.getItem('access-token'));
-        xhr1.send(data1);   
-        
-        let data2 = null;
-        let xhr2 = new XMLHttpRequest();
-        xhr2.addEventListener("readystatechange", function () {
-            if(this.readyState === 4){
-                that.setState({
-                   stateList: JSON.parse(this.responseText).states,
-                });
-            }
-        });
-        xhr2.open("GET", "http://localhost:8080/api/states");
-        xhr2.send(data2); 
-        
-        let data3 = null;
-        let xhr3 = new XMLHttpRequest();
-        xhr3.addEventListener("readystatechange", function () {
-            if(this.readyState === 4){
-                that.setState({
-                   paymentList: JSON.parse(this.responseText).paymentMethods,
-                });
-            }
-        });
-        xhr3.open("GET", "http://localhost:8080/api/payment");
-        xhr3.send(data3); 
+            });
+            xhr1.open("GET", "http://localhost:8080/api/address/customer");
+            xhr1.setRequestHeader("Authorization", "Bearer "+ sessionStorage.getItem('access-token'));
+            xhr1.send(data1);   
+            
+            let data2 = null;
+            let xhr2 = new XMLHttpRequest();
+            xhr2.addEventListener("readystatechange", function () {
+                if(this.readyState === 4){
+                    that.setState({
+                       stateList: JSON.parse(this.responseText).states,
+                    });
+                }
+            });
+            xhr2.open("GET", "http://localhost:8080/api/states");
+            xhr2.send(data2); 
+            
+            let data3 = null;
+            let xhr3 = new XMLHttpRequest();
+            xhr3.addEventListener("readystatechange", function () {
+                if(this.readyState === 4){
+                    that.setState({
+                       paymentList: JSON.parse(this.responseText).paymentMethods,
+                    });
+                }
+            });
+            xhr3.open("GET", "http://localhost:8080/api/payment");
+            xhr3.send(data3); 
+        }
     }
 
     inputCityChangeHandler = (e) => {
@@ -245,7 +251,6 @@ class Checkout extends Component{
             this.setState({ setOpenOrderError: true })
         }
         else{
-
             let item_quantities = [];
             let item = {};
             for(let i in this.props.location.summary.cart_items){
@@ -290,13 +295,17 @@ class Checkout extends Component{
         this.setState({
             setOpenOrderError: false,
             setOpenOrderPlaced: false,
-       })
+        })
     }
 
     render(){
         return(
             <div>
-                <Header/>
+                {this.props.location.summary !== undefined ? 
+                <div>
+                {sessionStorage.getItem("access-token") !== null ?
+                <div>
+                <Header history={this.props.history}/>
                 <div className="checkout-main-conatiner">
                     <div className="steps">
                         <Stepper activeStep={this.state.activeStep} orientation="vertical">
@@ -368,17 +377,20 @@ class Checkout extends Component{
                                         </FormHelperText>
                                     </FormControl>
                                     <br/> <br/>
-                                    <FormControl style={{width: "50%"}} required>
-                                        <InputLabel style={{width: "50%"}} htmlFor="state">State</InputLabel>
-                                        <Select style={{width: "50%"}}
+                                    <FormControl style={{width: "25%"}} required>
+                                        <InputLabel htmlFor="state">State</InputLabel>
+                                        <Select MenuProps={{
+                                            anchorEl:this.state.type
+                                                }}            
                                             id="demo-simple-select"
                                             value={this.state.state}
                                             onChange={this.stateChangeHandler}
+                                            onOpen={this.openMenuHandler}
                                             >
                                             {this.state.stateList.map(name => (
-                                                <MenuItem key={"name"+name.id} value={name.id} >
-                                                    {name.state_name}
-                                                </MenuItem>
+                                            <MenuItem className="s" key={"name"+name.id} value={name.id}>
+                                                {name.state_name}
+                                            </MenuItem>
                                             ))}
                                         </Select>
                                         <FormHelperText className={this.state.stateRequired}>
@@ -526,6 +538,10 @@ class Checkout extends Component{
                         </IconButton>
                       }
                 />
+               </div>
+                : this.props.history.push('/') }
+                </div>
+                : this.props.history.push('/') }
             </div>
         );
     }

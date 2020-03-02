@@ -57,7 +57,7 @@
 
 .summary-card-container{
     width:30%;
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 .summary-checkout{
@@ -78,6 +78,11 @@
 .summary-items-container{
     color: darkgrey;
     margin-bottom: 5px;
+}
+
+
+.s{
+    height: 210px;
 }
 
 @media (max-width:1025px){
